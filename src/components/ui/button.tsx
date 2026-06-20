@@ -1,3 +1,5 @@
+import * as React from "react";
+import Link from "next/link";
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";
 
@@ -6,8 +8,9 @@ import { cn } from "@/lib/utils";
 /**
  * Reno Button — pill-shaped, ported from the prototype's `.btn` family.
  * Variants: primary (brand), dark (ink), ghost (outline), ghostOnDark,
- * accent (amber), secondary, link. Renders any element via Base UI's
- * `render` prop (e.g. `<Button render={<Link href="…" />}>`).
+ * accent (amber), secondary, link. For navigation use ButtonLink (a styled
+ * Next.js Link) rather than `render={<Link/>}`, which keeps native button
+ * semantics intact.
  */
 const buttonVariants = cva(
   "inline-flex shrink-0 items-center justify-center gap-2 rounded-full border-[1.5px] border-transparent font-semibold whitespace-nowrap transition-[background-color,border-color,color,transform,box-shadow] duration-150 outline-none select-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-[1.05em] [&_svg]:shrink-0",
@@ -58,4 +61,20 @@ function Button({
   );
 }
 
-export { Button, buttonVariants };
+/** A Next.js Link styled as a Button. Use for any navigating CTA. */
+function ButtonLink({
+  className,
+  variant,
+  size,
+  ...props
+}: React.ComponentProps<typeof Link> & VariantProps<typeof buttonVariants>) {
+  return (
+    <Link
+      data-slot="button-link"
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  );
+}
+
+export { Button, ButtonLink, buttonVariants };
