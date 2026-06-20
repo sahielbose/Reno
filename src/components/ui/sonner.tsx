@@ -26,10 +26,11 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       style={
         {
-          "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
-          "--normal-border": "var(--border)",
-          "--border-radius": "var(--radius)",
+          // Reno toasts are the prototype's dark ink pill.
+          "--normal-bg": "var(--ink)",
+          "--normal-text": "#ffffff",
+          "--normal-border": "var(--ink)",
+          "--border-radius": "11px",
         } as React.CSSProperties
       }
       toastOptions={{
