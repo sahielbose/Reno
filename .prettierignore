@@ -7,4 +7,7 @@ test-results
 public
 *.tsbuildinfo
 next-env.d.ts
+# Context / source-of-truth files — keep verbatim
 Reno_UI_REFERENCE.html
+Reno_CONTEXT.md
+Reno_BUILD_PLAN.md

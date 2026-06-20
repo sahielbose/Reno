@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reno — Run every job from bid to built</title>
+<!--
+  RENO — UI REFERENCE PROTOTYPE (single file, no build step, in-memory only)
+  A functional re-creation of Foreman's UX under Reno's OWN brand.
+  Contains BOTH the marketing landing page AND a working app prototype.
+  REBRAND IN ONE LINE: change --brand below (e.g. #EA580C for orange).
+  Design: "blueprint" — drafting-paper neutrals, blueprint-blue ink, amber accent,
+  monospace for all numbers. Display: Space Grotesk / Body: Inter / Data: JetBrains Mono.
+  NO pricing, NO "Book a Demo": every CTA opens the app.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#1E47D8; --brand-700:#1738ad; --brand-100:#e7ecfc; --accent:#F5A524; --accent-soft:#fde9c6;
+  --ink:#0E1726; --paper:#F6F7FB; --white:#fff; --line:#E4E8F1; --line-2:#cfd6e4;
+  --text:#0E1726; --text-2:#4a5878; --text-3:#8a96ad; --ok:#16A34A; --ok-soft:#dcfce7;
+  --warn:#d97706; --danger:#dc2626; --danger-soft:#fde6e6;
+  --radius:14px; --radius-lg:22px; --shadow-sm:0 1px 3px rgba(14,23,38,.07);
+  --shadow:0 10px 30px -12px rgba(14,23,38,.18),0 2px 8px rgba(14,23,38,.06); --shadow-lg:0 30px 60px -20px rgba(14,23,38,.35);
+  --fd:"Space Grotesk",system-ui,sans-serif; --fb:"Inter",system-ui,sans-serif; --fm:"JetBrains Mono",monospace; --maxw:1180px;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--fb);color:var(--text);background:#fff;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--fd);line-height:1.1;margin:0;letter-spacing:-.02em;font-weight:600}
+p{margin:0} a{color:inherit;text-decoration:none} button{font-family:inherit;cursor:pointer;border:none;background:none}
+.mono{font-family:var(--fm);font-variant-numeric:tabular-nums} .hidden{display:none!important}
+.btn{display:inline-flex;align-items:center;gap:.5rem;font-weight:600;font-size:.95rem;padding:.7rem 1.2rem;border-radius:999px;transition:.18s;white-space:nowrap;border:1.5px solid transparent}
+.btn svg{width:1.05em;height:1.05em}
+.btn-primary{background:var(--brand);color:#fff} .btn-primary:hover{background:var(--brand-700);transform:translateY(-1px)}
+.btn-dark{background:var(--ink);color:#fff} .btn-dark:hover{background:#000;transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--text);border-color:var(--line-2)} .btn-ghost:hover{border-color:var(--ink)}
+.btn-ghost.on-dark{color:#fff;border-color:rgba(255,255,255,.35)} .btn-ghost.on-dark:hover{border-color:#fff}
+.btn-accent{background:var(--accent);color:#3a2a00} .btn-sm{padding:.5rem .9rem;font-size:.85rem}
+/* nav */
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;justify-content:center;padding:14px 18px}
+.nav-inner{width:100%;max-width:var(--maxw);display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.55rem .6rem .55rem 1rem;border-radius:999px;transition:.25s}
+.nav.scrolled .nav-inner{background:rgba(255,255,255,.88);backdrop-filter:blur(14px);box-shadow:var(--shadow);border:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:.6rem;font-family:var(--fd);font-weight:700;font-size:1.2rem;color:#fff}
+.nav.scrolled .brand{color:var(--ink)} .brand .mark{width:30px;height:30px;flex:none}
+.nav-links{display:flex;gap:.3rem} .nav-links a{padding:.5rem .8rem;border-radius:999px;font-weight:500;font-size:.95rem;color:rgba(255,255,255,.9)}
+.nav.scrolled .nav-links a{color:var(--text-2)} .nav-links a:hover{background:rgba(255,255,255,.12)} .nav.scrolled .nav-links a:hover{background:var(--paper)}
+.nav-cta{display:flex;gap:.5rem;align-items:center} .nav .login{color:#fff} .nav.scrolled .login{color:var(--ink)}
+/* hero */
+.hero{position:relative;background:var(--ink);color:#fff;overflow:hidden;padding:165px 20px 80px;text-align:center}
+.hero .grid{position:absolute;inset:0;opacity:.5;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:46px 46px;-webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 28%,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse 90% 70% at 50% 28%,#000 30%,transparent 78%)}
+.hero .glow{position:absolute;width:760px;height:760px;left:50%;top:-180px;transform:translateX(-50%);background:radial-gradient(circle,rgba(30,71,216,.55),transparent 62%);filter:blur(20px)}
+.hero .glow.amber{left:78%;top:120px;width:420px;height:420px;background:radial-gradient(circle,rgba(245,165,36,.3),transparent 62%)}
+.hi{position:relative;max-width:920px;margin:0 auto}
+.eyebrow{display:inline-flex;align-items:center;gap:.5rem;font-size:.82rem;font-weight:600;padding:.4rem .85rem;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);margin-bottom:1.4rem}
+.eyebrow .y{width:17px;height:17px;border-radius:4px;background:var(--accent);color:#1a1300;display:grid;place-items:center;font-weight:800;font-size:.7rem;font-family:var(--fd)}
+.hero h1{font-size:clamp(2.6rem,6.2vw,4.5rem);font-weight:700;letter-spacing:-.035em}
+.hero h1 .hl{background:var(--brand);padding:0 .18em;border-radius:.12em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.hero .sub{font-size:1.2rem;color:rgba(255,255,255,.78);max-width:560px;margin:1.3rem auto 2rem}
+.hcta{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap}
+.spine{position:relative;max-width:980px;margin:60px auto 0}
+.spine-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-lg);padding:22px;backdrop-filter:blur(6px);box-shadow:var(--shadow-lg)}
+.spine-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding:0 4px;font-weight:600;font-size:.92rem}
+.spine-h .pill{font-size:.74rem;padding:.3rem .7rem;border-radius:999px;background:rgba(22,163,74,.18);color:#7ee2a8;border:1px solid rgba(22,163,74,.35)}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;position:relative}
+.rail{position:absolute;top:26px;left:8%;right:8%;height:2px;background:rgba(255,255,255,.14)}
+.step{position:relative;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 12px;text-align:left}
+.step .dot{width:13px;height:13px;border-radius:50%;background:var(--brand);border:3px solid var(--ink);margin-bottom:30px}
+.step.done .dot{background:var(--ok)} .step.active .dot{background:var(--accent)}
+.step .k{font-size:.72rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.step .v{font-family:var(--fm);font-size:1.05rem;font-weight:700;margin-top:3px} .step .s{font-size:.78rem;color:rgba(255,255,255,.6);margin-top:2px}
+.trust{background:var(--ink);color:#fff;padding:10px 20px 60px;text-align:center}
+.trust .lbl{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:24px}
+.logos{display:flex;flex-wrap:wrap;justify-content:center;gap:34px 52px;opacity:.6}
+.logos span{font-family:var(--fd);font-weight:700;letter-spacing:.04em;font-size:1.05rem}
+/* sections */
+.section{padding:90px 20px} .section.tight{padding-top:0} .wrap{max-width:var(--maxw);margin:0 auto}
+.fh{text-align:center;max-width:680px;margin:0 auto 40px}
+.fh h2{font-size:clamp(1.9rem,3.6vw,2.6rem)} .fh p{color:var(--text-2);font-size:1.1rem;margin-top:.9rem} .fh .c{margin-top:1.5rem}
+.frame{border-radius:var(--radius-lg);padding:14px;box-shadow:var(--shadow-lg);max-width:920px;margin:0 auto}
+.frame.blue{background:linear-gradient(150deg,#16204a,#1E47D8 140%)} .frame.dark{background:linear-gradient(150deg,#0c1430,#26305a)}
+.frame.green{background:linear-gradient(150deg,#0f2a1e,#1f7a4d 150%)} .frame.violet{background:linear-gradient(150deg,#171436,#4536b8 150%)} .frame.amber{background:linear-gradient(150deg,#3a2a07,#7a5410 150%)}
+.frame .in{background:#fff;border-radius:13px;overflow:hidden}
+/* mock: ai */
+.m-ai{display:grid;grid-template-columns:200px 1fr;min-height:290px}
+.m-ai .list{background:var(--paper);border-right:1px solid var(--line);padding:14px}
+.m-ai .list .h{font-weight:700;font-size:.92rem} .m-ai .list .h span{display:block;font-size:.72rem;color:var(--text-3);font-weight:500}
+.mp{display:flex;gap:.6rem;align-items:center;padding:.55rem .4rem;border-radius:9px;margin-top:.5rem}
+.mp .ph{width:30px;height:30px;border-radius:7px;background:var(--brand-100);flex:none;display:grid;place-items:center}
+.mp .nm{font-size:.82rem;font-weight:600;line-height:1.2} .mp .st{font-size:.7rem;color:var(--text-3)}
+.ds{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px} .da{background:var(--ok)} .db{background:var(--accent)} .dp{background:var(--brand)}
+.m-ai .chat{padding:18px;display:flex;flex-direction:column}
+.cr{display:flex;gap:.55rem;margin-bottom:14px} .cr.me{justify-content:flex-end}
+.bub{max-width:80%;padding:.7rem .9rem;border-radius:13px;font-size:.9rem;line-height:1.45}
+.bub.them{background:var(--paper);border:1px solid var(--line)} .bub.me{background:var(--brand);color:#fff;border-bottom-right-radius:4px}
+.av{width:26px;height:26px;border-radius:7px;flex:none;display:grid;place-items:center;background:var(--ink);color:#fff;font-size:.7rem;font-weight:700}
+.inv-m{margin-top:.6rem;border:1px solid var(--line);border-radius:10px;padding:.7rem .8rem;font-size:.82rem}
+.inv-m .t{display:flex;justify-content:space-between;color:var(--text-3);font-size:.7rem}
+.tag{font-size:.66rem;font-weight:700;padding:.18rem .5rem;border-radius:6px} .t-un{background:var(--danger-soft);color:var(--danger)}
+.ask{margin-top:auto;display:flex;gap:.5rem;align-items:center;border:1px solid var(--line);border-radius:11px;padding:.5rem .5rem .5rem .9rem}
+.ask input{border:none;outline:none;flex:1;font-size:.88rem} .ask .snd{width:32px;height:32px;border-radius:8px;background:var(--brand);color:#fff;display:grid;place-items:center}
+/* mock: takeoff */
+.m-tk .bar{display:flex;align-items:center;gap:.5rem;padding:.5rem .8rem;border-bottom:1px solid var(--line);font-size:.78rem;color:var(--text-2)}
+.tb{padding:.32rem .6rem;border-radius:7px;border:1px solid var(--line);font-size:.74rem;font-weight:600;color:var(--text-2)} .tb.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.plan{position:relative;height:300px;background:linear-gradient(rgba(30,71,216,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(30,71,216,.05) 1px,transparent 1px);background-size:24px 24px}
+/* mock: budget+proposal */
+.m-bp{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px;background:var(--paper)}
+.mc{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:.8rem}
+.mc .ch{display:flex;justify-content:space-between;align-items:center;padding:.7rem .85rem;border-bottom:1px solid var(--line)}
+.mc .ch .id{font-family:var(--fm);font-size:.68rem;color:var(--text-3)} .mc .ch .nm{font-weight:700} .mc .ch .tot{font-family:var(--fm);font-weight:700}
+.br{display:grid;grid-template-columns:24px 1fr 38px 40px 60px;gap:6px;padding:.42rem .85rem;font-family:var(--fm);font-size:.72rem;align-items:center}
+.br.hd{color:var(--text-3);font-size:.62rem;border-bottom:1px solid var(--line)} .br.sec{background:var(--paper);font-family:var(--fb);font-weight:700;grid-template-columns:1fr auto}
+.br .r{text-align:right} .mc .ft{padding:.6rem;border-top:1px solid var(--line)}
+.genb{background:var(--ok);color:#fff;border-radius:8px;text-align:center;padding:.5rem;font-weight:600;font-size:.82rem}
+.pl{display:flex;justify-content:space-between;padding:.5rem .85rem;border-bottom:1px solid var(--line);font-size:.84rem} .pl .a{font-family:var(--fm);font-weight:600}
+/* mock: esign */
+.m-es{display:grid;grid-template-columns:1fr 220px;background:var(--paper)}
+.esd{background:#fff;margin:14px;border-radius:11px;border:1px solid var(--line);padding:18px}
+.esd .ttl{text-align:center;font-weight:700;letter-spacing:.05em;font-size:.8rem;color:var(--text-2)} .esd .s2{text-align:center;font-size:.7rem;color:var(--text-3);margin-bottom:14px}
+.esg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0} .esf{border:1px solid var(--line);border-radius:8px;padding:.5rem .7rem}
+.esf .l{font-size:.62rem;color:var(--text-3);text-transform:uppercase} .esf .v{font-weight:600;font-size:.85rem}
+.essig{margin-top:14px;border:1.5px dashed var(--accent);background:var(--accent-soft);border-radius:8px;padding:.9rem;text-align:center;color:var(--warn);font-size:.78rem;font-weight:600}
+.skel{height:7px;border-radius:4px;background:var(--line);margin:.4rem 0}
+.ess{padding:16px 14px;border-left:1px solid var(--line)} .ess .l{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:.5rem}
+.rc{border:1px solid var(--line);border-radius:9px;padding:.55rem .7rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center;font-size:.8rem} .rc.on{border-color:var(--accent);background:var(--accent-soft)}
+.tg{width:30px;height:17px;border-radius:999px;background:var(--accent);position:relative} .tg::after{content:"";position:absolute;width:13px;height:13px;border-radius:50%;background:#fff;top:2px;right:2px} .tg.off{background:var(--line-2)} .tg.off::after{left:2px;right:auto}
+/* mock: invoice */
+.m-inv{background:linear-gradient(160deg,#11321f,#1d5e3a);color:#fff;padding:28px;border-radius:13px;max-width:600px;margin:0 auto}
+.m-inv .t{display:flex;justify-content:space-between;align-items:flex-start} .m-inv .t .id{font-size:.68rem;letter-spacing:.08em;color:rgba(255,255,255,.55)}
+.m-inv .t h4{font-size:1.1rem;margin-top:.2rem} .m-inv .t .w{font-size:.78rem;color:rgba(255,255,255,.6)}
+.m-inv .amt{font-family:var(--fm);font-size:1.6rem;font-weight:700;text-align:right} .m-inv .amt small{display:block;font-size:.66rem;color:rgba(255,255,255,.55);font-family:var(--fb)}
+.m-inv .ls{margin:20px 0 14px;border-top:1px solid rgba(255,255,255,.12);padding-top:14px}
+.m-inv .ln{display:flex;justify-content:space-between;font-size:.86rem;padding:.3rem 0} .m-inv .ln .v{font-family:var(--fm)}
+.m-inv .pb{height:5px;border-radius:999px;background:rgba(255,255,255,.15);margin:.6rem 0} .m-inv .pb i{display:block;height:100%;width:100%;background:#5fd693;border-radius:999px}
+.m-inv .ft{display:flex;justify-content:space-between;align-items:center}
+.pp{font-size:.74rem;font-weight:700;padding:.3rem .7rem;border-radius:999px;background:rgba(95,214,147,.18);color:#bff3d2}
+/* gantt */
+.gantt{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.gw{display:grid;grid-template-columns:120px repeat(6,1fr);border-bottom:1px solid var(--line);font-size:.66rem;color:var(--text-3)}
+.gw div{padding:.4rem .5rem;border-left:1px solid var(--line)} .gw div:first-child{border:none}
+.grow{display:grid;grid-template-columns:120px 1fr;align-items:center;border-bottom:1px solid #f1f3f8;height:34px}
+.grow .lab{font-size:.76rem;padding-left:.7rem;color:var(--text-2)} .gtrk{position:relative;height:100%}
+.gbar{position:absolute;top:8px;height:18px;border-radius:6px;background:#3f7d63} .gbar.crit{background:var(--brand)}
+.gtoday{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);z-index:3} .gtoday .tl{position:absolute;top:-2px;left:-15px;background:var(--accent);color:#3a2a00;font-size:.6rem;font-weight:700;padding:.1rem .35rem;border-radius:5px}
+.gft{display:flex;justify-content:space-between;padding:.5rem .7rem;font-size:.7rem;color:var(--text-3);border-top:1px solid var(--line)}
+.m-g{background:#fff;padding:16px} .gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px} .gh .t{font-weight:700;font-size:.92rem}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:.74rem} .seg span{padding:.3rem .7rem;font-weight:600;color:var(--text-2)} .seg span.on{background:var(--ink);color:#fff}
+/* files+rfi */
+.m-fl{display:grid;grid-template-columns:200px 1fr;background:#fff}
+.fls{padding:14px;border-right:1px solid var(--line)} .fls .h{font-weight:700;font-size:.9rem} .fls .h span{display:block;font-size:.7rem;color:var(--text-3);font-weight:500}
+.fl{display:flex;gap:.5rem;align-items:center;padding:.5rem .3rem;border-radius:8px}
+.fl .ic{width:26px;height:30px;border-radius:5px;background:var(--paper);border:1px solid var(--line);flex:none;display:grid;place-items:center;font-size:.55rem;color:var(--text-3)}
+.fl .nm{font-size:.78rem;font-weight:600;line-height:1.15} .fl .mt{font-size:.66rem;color:var(--text-3)}
+.bd{font-size:.6rem;font-weight:700;padding:.1rem .4rem;border-radius:5px;margin-right:.3rem}
+.bd-pl{background:var(--brand-100);color:var(--brand)} .bd-pe{background:var(--accent-soft);color:var(--warn)} .bd-in{background:#e0f2fe;color:#0369a1} .bd-ph{background:#f3e8ff;color:#7e22ce} .bd-co{background:var(--ok-soft);color:var(--ok)}
+.rfi{padding:18px} .rfi .hd{display:flex;justify-content:space-between;align-items:center} .rfi .id{font-family:var(--fm);font-size:.7rem;color:var(--text-3)}
+.spill{font-size:.66rem;font-weight:700;padding:.18rem .55rem;border-radius:6px;background:var(--ok-soft);color:var(--ok)}
+.rfi h4{font-size:1rem;margin:.3rem 0 1rem} .rmsg{display:flex;gap:.6rem;margin-bottom:.8rem} .rmsg.me{flex-direction:row-reverse}
+.rwho{width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:.66rem;font-weight:700;background:var(--paper);border:1px solid var(--line)}
+.rtxt{font-size:.84rem;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:.6rem .8rem} .rmsg.me .rtxt{background:var(--accent-soft);border-color:var(--accent)}
+.rres{text-align:center;font-size:.72rem;color:var(--ok);margin-top:.5rem}
+/* feature grid */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+.aff{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fff;transition:.18s;cursor:pointer} .aff:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.aff .ic{width:38px;height:38px;border-radius:10px;background:var(--brand-100);color:var(--brand);display:grid;place-items:center;margin-bottom:.7rem;font-size:1.1rem}
+.aff h4{font-size:1rem} .aff p{font-size:.86rem;color:var(--text-2);margin-top:.35rem}
+/* cta + footer */
+.ctab{margin:0 20px} .cti{max-width:var(--maxw);margin:0 auto;background:var(--ink);border-radius:28px;color:#fff;text-align:center;padding:80px 24px;position:relative;overflow:hidden}
+.cti .glow{position:absolute;width:600px;height:600px;left:50%;top:30%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(245,165,36,.18),transparent 60%)}
+.cti h2{position:relative;font-size:clamp(2.2rem,5vw,3.4rem);font-weight:700} .cti h2 .dim{color:var(--text-3)}
+.cti p{position:relative;color:rgba(255,255,255,.7);margin:1.1rem auto 2rem;max-width:440px} .cti .r{position:relative;display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap}
+footer{background:var(--ink);color:#fff;padding:60px 20px 28px} .fg{max-width:var(--maxw);margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr;gap:30px}
+.fg .brand{color:#fff;margin-bottom:1rem} .ftag{font-size:.86rem;color:rgba(255,255,255,.5);max-width:230px}
+.fsoc{display:flex;gap:.6rem;margin-top:1rem} .fsoc a{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.07);display:grid;place-items:center;color:rgba(255,255,255,.7)} .fsoc a:hover{background:var(--brand);color:#fff}
+.fc h5{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:1rem;font-family:var(--fb);font-weight:700} .fc a{display:block;color:rgba(255,255,255,.72);font-size:.9rem;padding:.28rem 0} .fc a:hover{color:#fff}
+.fb{max-width:var(--maxw);margin:36px auto 0;padding-top:22px;border-top:1px solid rgba(255,255,255,.1);text-align:center;font-size:.82rem;color:rgba(255,255,255,.4)}
+/* app shell */
+#app{min-height:100vh;background:var(--paper)} .ag{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
+.sb{background:var(--ink);color:#fff;padding:18px 14px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.sb .brand{color:#fff;padding:.3rem .5rem 1.2rem}
+.osw{display:flex;align-items:center;gap:.6rem;padding:.6rem;border-radius:11px;background:rgba(255,255,255,.06);margin-bottom:1.1rem;cursor:pointer}
+.osw .lg{width:32px;height:32px;border-radius:8px;background:var(--brand);display:grid;place-items:center;font-weight:700;font-family:var(--fd)} .osw .nm{font-size:.86rem;font-weight:600;line-height:1.1} .osw .nm span{display:block;font-size:.68rem;color:rgba(255,255,255,.5);font-weight:400}
+.ni{display:flex;align-items:center;gap:.7rem;padding:.6rem .7rem;border-radius:10px;color:rgba(255,255,255,.72);font-size:.9rem;font-weight:500;cursor:pointer;transition:.14s;margin-bottom:2px} .ni svg{width:18px;height:18px;flex:none} .ni:hover{background:rgba(255,255,255,.07);color:#fff} .ni.on{background:var(--brand);color:#fff}
+.nsep{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.34);padding:1rem .7rem .4rem;font-weight:700}
+.sf{margin-top:auto;padding-top:1rem;border-top:1px solid rgba(255,255,255,.1)}
+.uc{display:flex;align-items:center;gap:.6rem;padding:.5rem;border-radius:10px;cursor:pointer} .uc:hover{background:rgba(255,255,255,.07)} .uc .a{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#3a2a00;display:grid;place-items:center;font-weight:700;font-size:.72rem} .uc .nm{font-size:.82rem;font-weight:600;line-height:1.1} .uc .nm span{display:block;font-size:.68rem;color:rgba(255,255,255,.5);font-weight:400}
+.tbar{display:flex;align-items:center;gap:1rem;padding:14px 26px;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.srch{flex:1;max-width:420px;display:flex;align-items:center;gap:.5rem;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.5rem .8rem;color:var(--text-3)} .srch input{border:none;background:none;outline:none;flex:1;font-size:.9rem;color:var(--text)}
+.ib{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;color:var(--text-2);border:1px solid var(--line);background:#fff} .ib:hover{background:var(--paper)}
+.main{padding:28px 30px 60px;max-width:1200px} .ph{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;gap:1rem;flex-wrap:wrap} .ph h1{font-size:1.7rem} .ph .sub{color:var(--text-2);font-size:.95rem;margin-top:.25rem}
+.bks{font-size:.82rem;color:var(--text-3);display:inline-flex;align-items:center;gap:.3rem;cursor:pointer;margin-bottom:1rem} .bks:hover{color:var(--brand)}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm)} .ch2{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;border-bottom:1px solid var(--line)} .ch2 h3{font-size:1.05rem} .cb{padding:1.2rem}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px} .stat{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow-sm)} .stat .k{font-size:.8rem;color:var(--text-2);font-weight:500} .stat .v{font-family:var(--fm);font-size:1.9rem;font-weight:700;margin-top:.4rem} .stat .d{font-size:.76rem;margin-top:.2rem;font-weight:600} .stat .d.up{color:var(--ok)} .stat .d.dn{color:var(--danger)} .stat .d.fl{color:var(--text-3)} .stat .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;float:right;font-size:1.1rem}
+table{width:100%;border-collapse:collapse} th{text-align:left;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--text-3);font-weight:700;padding:.7rem 1.2rem;border-bottom:1px solid var(--line)} td{padding:.85rem 1.2rem;border-bottom:1px solid #f1f3f8;font-size:.9rem} tbody tr{cursor:pointer} tbody tr:hover{background:var(--paper)} .r{text-align:right}
+.pill{font-size:.72rem;font-weight:700;padding:.25rem .6rem;border-radius:999px;display:inline-flex} .p-act{background:var(--ok-soft);color:var(--ok)} .p-bid{background:var(--accent-soft);color:var(--warn)} .p-pln{background:var(--brand-100);color:var(--brand)} .p-cls{background:#eef1f6;color:var(--text-2)} .p-drf{background:#eef1f6;color:var(--text-2)} .p-snt{background:#e0f2fe;color:#0369a1} .p-sgn{background:var(--ok-soft);color:var(--ok)} .p-pd{background:var(--ok-soft);color:var(--ok)} .p-un{background:var(--danger-soft);color:var(--danger)}
+.avt{width:30px;height:30px;border-radius:50%;display:inline-grid;place-items:center;font-size:.72rem;font-weight:700;background:var(--brand-100);color:var(--brand)} .wa{display:flex;align-items:center;gap:.6rem}
+.pj{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:1rem} .pj h1{font-size:1.6rem} .pj .meta{color:var(--text-2);font-size:.9rem;margin-top:.3rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.tabs{display:flex;gap:.2rem;border-bottom:1px solid var(--line);overflow-x:auto;margin-bottom:24px} .tab{padding:.7rem 1rem;font-size:.9rem;font-weight:600;color:var(--text-2);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap} .tab:hover{color:var(--ink)} .tab.on{color:var(--brand);border-bottom-color:var(--brand)}
+.tc{display:grid;grid-template-columns:2fr 1fr;gap:20px} .kv{display:flex;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid #f1f3f8;font-size:.9rem} .kv .k{color:var(--text-2)} .kv .v{font-weight:600}
+.act{display:flex;gap:.7rem;padding:.6rem 0;font-size:.86rem} .act .ad{width:8px;height:8px;border-radius:50%;background:var(--brand);margin-top:.45rem;flex:none} .act .at{color:var(--text-3);font-size:.74rem}
+.bt{width:100%;border-collapse:collapse;font-size:.88rem} .bt th{padding:.6rem .8rem} .bt td{padding:.4rem .8rem;border-bottom:1px solid #f1f3f8} .bt-sec td{background:var(--paper);font-weight:700;border-top:1px solid var(--line)} .bt-sec .st{font-family:var(--fm);float:right}
+.bt input{width:100%;border:1px solid transparent;border-radius:7px;padding:.35rem .5rem;font-family:var(--fm);font-size:.85rem;text-align:right;background:transparent} .bt input:hover{border-color:var(--line)} .bt input:focus{border-color:var(--brand);outline:none;background:#fff} .bt input.nm{text-align:left;font-family:var(--fb)} .bt .code{font-family:var(--fm);font-size:.72rem;color:var(--text-3)} .bt .lt{font-family:var(--fm);font-weight:600;text-align:right} .dr{color:var(--text-3);font-size:1rem;opacity:0} tr:hover .dr{opacity:1} .dr:hover{color:var(--danger)}
+.grand{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.2rem;background:var(--ink);color:#fff;border-radius:0 0 var(--radius) var(--radius)} .grand .v{font-family:var(--fm);font-size:1.5rem;font-weight:700}
+.prop{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;max-width:760px;box-shadow:var(--shadow-sm)} .pt{padding:26px 30px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start} .pt .co{display:flex;gap:.7rem;align-items:center} .pt .amt{font-family:var(--fm);font-size:1.5rem;font-weight:700;text-align:right} .pt .amt small{display:block;font-size:.66rem;color:var(--text-3);font-family:var(--fb)}
+.pbody{padding:18px 30px} .psec{display:flex;justify-content:space-between;padding:.7rem 0;border-bottom:1px solid #f1f3f8;font-size:.95rem} .psec .a{font-family:var(--fm);font-weight:600} .pscope{padding:18px 30px;background:var(--paper);font-size:.9rem;color:var(--text-2);line-height:1.6} .pfoot{padding:20px 30px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line)}
+.mbg{position:fixed;inset:0;background:rgba(14,23,38,.55);backdrop-filter:blur(3px);z-index:100;display:grid;place-items:center;padding:20px} .modal{background:#fff;border-radius:var(--radius-lg);max-width:520px;width:100%;box-shadow:var(--shadow-lg);overflow:hidden} .mh{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center} .mh h3{font-size:1.1rem} .mh .x{font-size:1.3rem;color:var(--text-3);cursor:pointer} .mb{padding:22px}
+.sigpad{border:1.5px dashed var(--line-2);border-radius:11px;background:var(--paper);touch-action:none;width:100%;display:block} .sr{display:flex;justify-content:space-between;align-items:center;margin-top:.7rem} .fld{margin-bottom:1rem} .fld label{font-size:.78rem;font-weight:600;color:var(--text-2);display:block;margin-bottom:.35rem} .fld input{width:100%;border:1px solid var(--line);border-radius:9px;padding:.6rem .8rem;font-size:.92rem} .fld input:focus{outline:none;border-color:var(--brand)}
+.audit{background:var(--ok-soft);border:1px solid #bbf7d0;border-radius:11px;padding:14px;font-size:.84rem;color:#166534} .audit .mono{font-size:.78rem}
+.tkw{display:grid;grid-template-columns:1fr 280px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff} .tkc{position:relative;background:#fbfcfe;background-image:linear-gradient(rgba(30,71,216,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(30,71,216,.06) 1px,transparent 1px);background-size:22px 22px} .tktool{display:flex;align-items:center;gap:.5rem;padding:.6rem .9rem;border-bottom:1px solid var(--line);background:#fff} #tkCanvas{display:block;cursor:crosshair;width:100%} .tkp{border-left:1px solid var(--line);padding:16px} .tkp h4{font-size:.95rem;margin-bottom:.3rem} .tkp .hint{font-size:.8rem;color:var(--text-2);margin-bottom:1rem} .tki{display:flex;justify-content:space-between;align-items:center;padding:.6rem .7rem;border:1px solid var(--line);border-radius:9px;margin-bottom:.5rem;font-size:.85rem} .tki .v{font-family:var(--fm);font-weight:700} .tki .nm{font-weight:600} .tki .sub{font-size:.72rem;color:var(--text-3)}
+.aip{display:flex;flex-direction:column;height:calc(100vh - 150px);background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden} .aif{flex:1;overflow-y:auto;padding:24px} .aim{display:flex;gap:.7rem;margin-bottom:18px;max-width:760px} .aim.me{flex-direction:row-reverse;margin-left:auto} .aim .av{width:32px;height:32px;border-radius:9px;flex:none} .aim .av.bot{background:var(--brand);color:#fff;display:grid;place-items:center} .aim .av.usr{background:var(--accent);color:#3a2a00;display:grid;place-items:center;font-weight:700} .aibub{padding:.8rem 1rem;border-radius:13px;font-size:.92rem;line-height:1.55} .aim.bot .aibub{background:var(--paper);border:1px solid var(--line)} .aim.me .aibub{background:var(--brand);color:#fff} .aibub .ref{margin-top:.7rem;border:1px solid var(--line);border-radius:9px;padding:.6rem .8rem;font-size:.82rem;background:#fff}
+.aisg{display:flex;gap:.5rem;flex-wrap:wrap;padding:0 24px 14px} .aisg button{font-size:.8rem;border:1px solid var(--line);border-radius:999px;padding:.4rem .8rem;color:var(--text-2);background:#fff} .aisg button:hover{border-color:var(--brand);color:var(--brand)} .aii{display:flex;gap:.6rem;padding:14px 18px;border-top:1px solid var(--line);align-items:center} .aii input{flex:1;border:1px solid var(--line);border-radius:11px;padding:.7rem 1rem;font-size:.92rem} .aii input:focus{outline:none;border-color:var(--brand)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:.8rem 1.2rem;border-radius:11px;box-shadow:var(--shadow-lg);z-index:200;font-size:.9rem;animation:rise .3s} @keyframes rise{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+.stg{display:grid;grid-template-columns:repeat(2,1fr);gap:16px} .intg{display:flex;justify-content:space-between;align-items:center;padding:.8rem 0;border-bottom:1px solid #f1f3f8} .intg .nm{font-weight:600;font-size:.9rem}
+.menu-btn{display:none}
+@media(max-width:980px){.frame,.m-bp,.m-ai,.m-fl,.m-es{grid-template-columns:1fr}.sg{grid-template-columns:1fr 1fr}.tc{grid-template-columns:1fr}.stg{grid-template-columns:1fr}.ag{grid-template-columns:1fr}.sb{position:fixed;left:0;top:0;z-index:60;transform:translateX(-100%);transition:.25s;width:236px}.sb.open{transform:none}.tkw{grid-template-columns:1fr}.fg{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr 1fr}.menu-btn{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text-2)}}
+@media(max-width:680px){.nav-links{display:none}.steps{grid-template-columns:1fr 1fr}.grid3,.sg{grid-template-columns:1fr}.hero{padding-top:130px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<!-- ===================== SITE ===================== -->
+<div id="site">
+  <nav class="nav" id="nav"><div class="nav-inner">
+    <a class="brand" href="#" onclick="top0();return false">
+      <svg class="mark" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="var(--brand)"/><path d="M9 23V9h7.2c2.5 0 4.3 1.6 4.3 4.1 0 1.9-1.1 3.3-2.8 3.8L21 23h-3.3l-3-5.4H12V23H9zm3-7.8h3.6c1.1 0 1.8-.6 1.8-1.6s-.7-1.6-1.8-1.6H12v3.2z" fill="#fff"/></svg>Reno</a>
+    <div class="nav-links"><a href="#f-ai">Features</a><a href="#serve">Who we serve</a><a href="#allfeat">Platform</a></div>
+    <div class="nav-cta"><a class="btn login" href="#" onclick="openApp('dashboard');return false">Log in</a>
+      <button class="btn btn-primary" onclick="openApp('dashboard')">Get started <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+  </div></nav>
+
+  <header class="hero"><div class="grid"></div><div class="glow"></div><div class="glow amber"></div>
+    <div class="hi">
+      <span class="eyebrow"><span class="y">R</span> The operating system for builders</span>
+      <h1>Run every job from<br>first bid to <span class="hl">final build</span>.</h1>
+      <p class="sub">Estimate, win, schedule, and get paid — one place for the whole job, so you stop stitching together spreadsheets, texts, and sticky notes.</p>
+      <div class="hcta"><button class="btn btn-primary" onclick="openApp('dashboard')">Get started <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="btn btn-ghost on-dark" onclick="openApp('project')">Open a live project</button></div>
+      <div class="spine"><div class="spine-card">
+        <div class="spine-h"><div>Maple Street Kitchen Remodel <span style="color:rgba(255,255,255,.45);font-weight:400">· one job, start to finish</span></div><span class="pill">● On track</span></div>
+        <div class="steps"><div class="rail"></div>
+          <div class="step done"><div class="dot"></div><div class="k">Budget</div><div class="v">$48,200</div><div class="s">6 sections</div></div>
+          <div class="step done"><div class="dot"></div><div class="k">Proposal</div><div class="v">Signed</div><div class="s">Mar 18</div></div>
+          <div class="step active"><div class="dot"></div><div class="k">Invoiced</div><div class="v">$18,400</div><div class="s">2 of 4 draws</div></div>
+          <div class="step"><div class="dot"></div><div class="k">Costs out</div><div class="v">$11,950</div><div class="s">3 bills</div></div>
+          <div class="step"><div class="dot"></div><div class="k">Schedule</div><div class="v">61%</div><div class="s">finish Jun 14</div></div>
+        </div></div></div>
+    </div></header>
+
+  <section class="trust"><div class="lbl">Trusted by contractors across the country</div>
+    <div class="logos"><span>NORTHGATE</span><span>MERIDIAN BUILD</span><span>CEDARLINE</span><span>IRONWOOD&nbsp;GC</span><span>PACIFIC&nbsp;RIDGE</span><span>SUMMIT&nbsp;&amp;&nbsp;CO</span></div></section>
+
+  <!-- AI -->
+  <section class="section" id="f-ai"><div class="wrap">
+    <div class="fh"><h2>Nothing slips through the cracks</h2><p>Every project, invoice, and deadline is watched for you. Ask about any job and get an answer — with the receipts — in seconds.</p><div class="c"><button class="btn btn-dark" onclick="openApp('ai')">Try the assistant →</button></div></div>
+    <div class="frame blue"><div class="in"><div class="m-ai">
+      <div class="list"><div class="h">Projects <span>4 active</span></div>
+        <div class="mp"><div class="ph">🍳</div><div><div class="nm">Maple St. Kitchen</div><div class="st"><i class="ds da"></i>Active</div></div></div>
+        <div class="mp"><div class="ph">🏠</div><div><div class="nm">Oakwood ADU</div><div class="st"><i class="ds da"></i>Active</div></div></div>
+        <div class="mp"><div class="ph">🔨</div><div><div class="nm">Ridgeline Roof</div><div class="st"><i class="ds db"></i>Bidding</div></div></div>
+        <div class="mp"><div class="ph">📐</div><div><div class="nm">Beacon Hill 2nd</div><div class="st"><i class="ds dp"></i>Planning</div></div></div></div>
+      <div class="chat"><div class="cr me"><div class="bub me">Did the deposit come in on the Maple Street kitchen yet?</div></div>
+        <div class="cr"><div class="av">R</div><div class="bub them">Not yet. <b>Invoice #3 for $7,500</b> went out Mar 3 and is still <span style="color:var(--danger)">unpaid</span>. The build starts <b>Mar 28</b> — worth a nudge.
+          <div class="inv-m"><div class="t"><span>INV-003</span><span class="tag t-un">UNPAID</span></div><div style="font-weight:600;margin-top:.3rem">Maple Street Kitchen — Deposit</div><div class="mono" style="font-weight:700">$7,500.00</div></div></div></div>
+        <div class="ask"><input placeholder="Ask anything about your projects…" onclick="openApp('ai')" readonly><div class="snd"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></div></div></div>
+    </div></div></div>
+  </div></section>
+
+  <!-- Takeoff -->
+  <section class="section tight"><div class="wrap">
+    <div class="fh"><h2>Measure right on your blueprints</h2><p>Upload a plan, set the scale, and pull takeoffs in the browser — areas, lengths, and counts that drop straight into your budget.</p><div class="c"><button class="btn btn-dark" onclick="openProjectTab('takeoff')">Open the takeoff tool →</button></div></div>
+    <div class="frame dark"><div class="in"><div class="m-tk">
+      <div class="bar"><div style="display:flex;gap:.3rem"><span class="tb on">Takeoff</span><span class="tb">Markup</span></div><div style="width:1px;height:18px;background:var(--line)"></div><div style="display:flex;gap:.3rem"><span class="tb">▢ Area</span><span class="tb">／ Length</span><span class="tb">• Count</span></div><div style="margin-left:auto;font-family:var(--fm);font-size:.72rem">Scale 1/4" = 1'-0"</div></div>
+      <div class="plan"><svg viewBox="0 0 760 300" style="position:absolute;inset:0;width:100%;height:100%"><g stroke="#1b2740" stroke-width="2" fill="none" opacity=".85"><rect x="40" y="40" width="240" height="150"/><rect x="40" y="40" width="120" height="80"/><rect x="320" y="40" width="180" height="220"/><rect x="540" y="40" width="180" height="120"/><rect x="540" y="180" width="180" height="80"/></g><text x="60" y="75" font-size="11" fill="#1b2740" font-family="monospace">KITCHEN</text><text x="340" y="60" font-size="11" fill="#1b2740" font-family="monospace">DINING</text><text x="560" y="60" font-size="11" fill="#1b2740" font-family="monospace">LIVING</text><rect x="320" y="40" width="180" height="220" fill="rgba(30,71,216,.18)" stroke="var(--brand)" stroke-width="2"/><rect x="408" y="142" width="60" height="20" rx="4" fill="var(--ink)"/><text x="438" y="156" font-size="11" fill="#fff" font-family="monospace" text-anchor="middle">182 SF</text></svg></div>
+    </div></div></div>
+  </div></section>
+
+  <!-- Budget -> Proposal -->
+  <section class="section tight"><div class="wrap">
+    <div class="fh"><h2>From cost breakdown to signed proposal — in one click</h2><p>Build the budget line by line, hit generate, and your client gets a branded proposal ready to sign. No copy-paste, no reformatting.</p><div class="c"><button class="btn btn-dark" onclick="openProjectTab('budget')">Start a budget →</button></div></div>
+    <div class="frame amber"><div class="in"><div class="m-bp">
+      <div class="mc"><div class="ch"><div><span class="id">BUD-004</span><div class="nm">Maple Street Kitchen</div></div><div class="tot">$48,200</div></div>
+        <div class="br hd"><span>#</span><span>Name</span><span class="r">Qty</span><span class="r">Unit</span><span class="r">Total</span></div>
+        <div class="br sec"><span>Demolition</span><span>$3,200</span></div><div class="br"><span>1.1</span><span>Demo &amp; disposal</span><span class="r">1</span><span class="r">LS</span><span class="r">$3,200</span></div>
+        <div class="br sec"><span>Cabinetry</span><span>$13,560</span></div><div class="br"><span>2.1</span><span>Custom cabinets</span><span class="r">18</span><span class="r">LF</span><span class="r">$9,360</span></div><div class="br"><span>2.2</span><span>Island</span><span class="r">1</span><span class="r">EA</span><span class="r">$4,200</span></div>
+        <div class="br sec"><span>Countertops</span><span>$5,890</span></div><div class="br"><span>3.1</span><span>Quartz slab</span><span class="r">62</span><span class="r">SF</span><span class="r">$5,890</span></div>
+        <div class="ft"><div class="genb">✓ Generated</div></div></div>
+      <div class="mc"><div class="ch"><div style="display:flex;gap:.4rem;align-items:center"><svg width="18" height="18" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="var(--brand)"/><path d="M9 23V9h7.2c2.5 0 4.3 1.6 4.3 4.1 0 1.9-1.1 3.3-2.8 3.8L21 23h-3.3l-3-5.4H12V23H9z" fill="#fff"/></svg><div><div class="nm" style="font-size:.74rem">Apex Build Co.</div><div class="id">Proposal #8 · D. Whitfield</div></div></div><div class="tot">$48,200</div></div>
+        <div class="pl"><span>Demolition</span><span class="a">$3,200</span></div><div class="pl"><span>Cabinetry</span><span class="a">$13,560</span></div><div class="pl"><span>Countertops</span><span class="a">$5,890</span></div><div class="pl"><span>Plumbing</span><span class="a">$5,600</span></div><div class="pl"><span>Electrical</span><span class="a">$4,800</span></div>
+        <div class="ft" style="display:flex;justify-content:space-between;align-items:center"><span class="pill p-snt">Sent</span><span style="font-size:.74rem;color:var(--text-3)">Awaiting signature…</span></div></div>
+    </div></div></div>
+  </div></section>
+
+  <!-- E-sign -->
+  <section class="section tight"><div class="wrap">
+    <div class="fh"><h2>Get contracts signed in minutes, not days</h2><p>Add signers to any proposal or vendor agreement and send. They sign from any device — no account, no separate e-sign tool — straight to the record.</p><div class="c"><button class="btn btn-dark" onclick="openProjectTab('proposal')">Send a contract →</button></div></div>
+    <div class="frame violet"><div class="in"><div class="m-es">
+      <div class="esd"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><span style="font-size:.72rem;font-family:var(--fm);color:var(--text-3)">Client Agreement · DOC-0014</span><span class="btn btn-dark btn-sm">Send for signature</span></div>
+        <div class="ttl">CLIENT AGREEMENT</div><div class="s2">Maple Street Kitchen · Apex Build Co.</div>
+        <div class="esg"><div class="esf"><div class="l">Client</div><div class="v">Dana Whitfield</div></div><div class="esf"><div class="l">Total</div><div class="v mono">$48,200</div></div></div>
+        <div class="skel" style="width:90%"></div><div class="skel" style="width:80%"></div><div class="skel" style="width:60%"></div>
+        <div class="essig">Dana Whitfield — sign here</div></div>
+      <div class="ess"><div class="l">Recipients</div>
+        <div class="rc on"><div><div style="font-weight:600">Dana Whitfield</div><div style="font-size:.68rem;color:var(--warn)">Signature</div></div><div class="tg"></div></div>
+        <div class="rc"><div><div style="font-weight:600">M. Rivera</div><div style="font-size:.68rem;color:var(--text-3)">CC only</div></div><div class="tg off"></div></div></div>
+    </div></div></div>
+  </div></section>
+
+  <!-- Invoice -->
+  <section class="section tight"><div class="wrap">
+    <div class="fh"><h2>Stop chasing checks</h2><p>Send an invoice, get paid online, and watch your books update themselves. From budget to reconciled payment — without touching your accounting software.</p><div class="c"><button class="btn btn-dark" onclick="openProjectTab('invoices')">Get paid →</button></div></div>
+    <div class="m-inv"><div class="t"><div><div class="id">INVOICE #3</div><h4>Maple Street Kitchen Remodel</h4><div class="w">Dana Whitfield · Due Mar 28, 2026</div></div><div class="amt">$12,500<small>Final payment</small></div></div>
+      <div class="ls"><div class="ln"><span>Kitchen demo &amp; disposal</span><span class="v">$1,200</span></div><div class="ln"><span>Cabinet installation</span><span class="v">$6,800</span></div><div class="ln"><span>Countertop &amp; backsplash</span><span class="v">$4,500</span></div><div class="pb"><i></i></div></div>
+      <div class="ft"><span class="pp">✓ Paid</span><span class="pp" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.8)">⟳ Synced to accounting</span></div></div>
+  </div></section>
+
+  <!-- Schedule -->
+  <section class="section tight"><div class="wrap">
+    <div class="fh"><h2>See the critical path before it slips</h2><p>Lay out tasks, link dependencies, and Reno computes the critical path automatically — so you know which delays actually push your finish date.</p><div class="c"><button class="btn btn-dark" onclick="openProjectTab('schedule')">Build a schedule →</button></div></div>
+    <div class="frame green"><div class="in"><div class="m-g"><div class="gh"><div class="t">Schedule · Maple Street Kitchen</div><div class="seg"><span class="on">Gantt</span><span>Calendar</span></div></div>
+      <div class="gantt"><div class="gw"><div></div><div>W1</div><div>W2</div><div>W3</div><div>W4</div><div>W5</div><div>W6</div></div><div id="lg"></div><div class="gft"><span>7 tasks · 4 dependencies</span><span>Finish Jun 14</span></div></div></div></div></div>
+  </div></section>
+
+  <!-- Files + RFI -->
+  <section class="section tight"><div class="wrap">
+    <div class="fh"><h2>All your project knowledge. One place, not six.</h2><p>Plans, permits, photos, contracts — all attached to the job. Requests go out, answers come back, and everything stays on the record.</p><div class="c"><button class="btn btn-dark" onclick="openProjectTab('documents')">See how it works →</button></div></div>
+    <div class="frame dark"><div class="in"><div class="m-fl">
+      <div class="fls"><div class="h">Files <span>5 files</span></div>
+        <div class="fl"><div class="ic">PDF</div><div><div class="nm">Floor Plan — L1.pdf</div><div class="mt"><span class="bd bd-pl">Plan</span>Mar 18</div></div></div>
+        <div class="fl"><div class="ic">PDF</div><div><div class="nm">Building Permit.pdf</div><div class="mt"><span class="bd bd-pe">Permit</span>Approved</div></div></div>
+        <div class="fl"><div class="ic">PDF</div><div><div class="nm">COI — Summit.pdf</div><div class="mt"><span class="bd bd-in">Insurance</span>Dec 2026</div></div></div>
+        <div class="fl"><div class="ic">IMG</div><div><div class="nm">Demo Photos</div><div class="mt"><span class="bd bd-ph">Photo</span>6 photos</div></div></div>
+        <div class="fl"><div class="ic">PDF</div><div><div class="nm">Framing Contract</div><div class="mt"><span class="bd bd-co">Contract</span>Signed</div></div></div></div>
+      <div class="rfi"><div class="hd"><span class="id">RFI-003</span><span class="spill">Responded</span></div><h4>Electrical panel location</h4>
+        <div class="rmsg"><div class="rwho">SP</div><div class="rtxt">Plans show two possible spots on page 4. Which one — need it before rough-in tomorrow.</div></div>
+        <div class="rmsg me"><div class="rwho" style="background:var(--brand);color:#fff">You</div><div class="rtxt">Utility closet, NE corner. Confirm with your inspector first.</div></div>
+        <div class="rres">✓ Resolved · Mar 19 at 3:42 PM</div></div>
+    </div></div></div>
+  </div></section>
+
+  <!-- Every feature -->
+  <section class="section tight" id="allfeat"><div class="wrap"><div class="fh"><h2>Built to work together — useful on its own</h2><p>Start with what you need today. Add the rest as your operation grows.</p></div><div class="grid3" id="featGrid"></div></div></section>
+
+  <!-- Who we serve -->
+  <section class="section tight" id="serve"><div class="wrap"><div class="fh"><h2>Made for every trade</h2><p>Residential, commercial, and the specialty trades in between.</p></div>
+    <div class="grid3" style="grid-template-columns:repeat(4,1fr)"><div class="aff"><div class="ic">🏠</div><h4>Home builders</h4><p>New construction, lot to keys.</p></div><div class="aff"><div class="ic">🛠️</div><h4>Remodelers</h4><p>Kitchens, baths, ADUs.</p></div><div class="aff"><div class="ic">🏚️</div><h4>Roofers</h4><p>Tear-offs and repairs.</p></div><div class="aff"><div class="ic">🏗️</div><h4>Commercial</h4><p>TIs and ground-up.</p></div></div></div></section>
+
+  <section class="ctab"><div class="cti"><div class="glow"></div><h2>From bid to built,<br><span class="dim">in one place.</span></h2><p>Join contractors who've put away the spreadsheets and sticky notes for good.</p><div class="r"><button class="btn btn-primary" onclick="openApp('dashboard')">Get started →</button><button class="btn btn-ghost on-dark" onclick="openApp('project')">Open a live project</button></div></div></section>
+
+  <footer><div class="fg">
+    <div><a class="brand" href="#" onclick="top0();return false"><svg class="mark" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="var(--brand)"/><path d="M9 23V9h7.2c2.5 0 4.3 1.6 4.3 4.1 0 1.9-1.1 3.3-2.8 3.8L21 23h-3.3l-3-5.4H12V23H9zm3-7.8h3.6c1.1 0 1.8-.6 1.8-1.6s-.7-1.6-1.8-1.6H12v3.2z" fill="#fff"/></svg>Reno</a><p class="ftag">Construction management software for modern builders.</p>
+      <div class="fsoc"><a href="#" onclick="return false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg></a><a href="#" onclick="return false"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7 8 8.2 12h-6.4l-5-7.3L6 22H2.9l7.5-8.6L2.5 2H9l4.5 6.6L18.9 2z"/></svg></a></div></div>
+    <div class="fc"><h5>Who we serve</h5><a href="#serve">Home builders</a><a href="#serve">Remodelers</a><a href="#serve">Roofers</a><a href="#serve">Commercial</a></div>
+    <div class="fc"><h5>Platform</h5><a href="#f-ai">Features</a><a href="#allfeat">All modules</a><a href="#" onclick="openApp('dashboard');return false">Open the app</a></div>
+    <div class="fc"><h5>Company</h5><a href="#" onclick="return false">About</a><a href="#" onclick="return false">Contact</a><a href="#" onclick="openApp('dashboard');return false">Sign in</a></div>
+    <div class="fc"><h5>Legal</h5><a href="#" onclick="return false">Privacy</a><a href="#" onclick="return false">Terms</a></div>
+  </div><div class="fb">© 2026 Reno. A functional UX study — not affiliated with Foreman.</div></footer>
+</div>
+
+<!-- ===================== APP ===================== -->
+<div id="app" class="hidden"><div class="ag">
+  <aside class="sb" id="sb">
+    <a class="brand" href="#" onclick="closeApp();return false"><svg class="mark" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#fff"/><path d="M9 23V9h7.2c2.5 0 4.3 1.6 4.3 4.1 0 1.9-1.1 3.3-2.8 3.8L21 23h-3.3l-3-5.4H12V23H9zm3-7.8h3.6c1.1 0 1.8-.6 1.8-1.6s-.7-1.6-1.8-1.6H12v3.2z" fill="var(--brand)"/></svg>Reno</a>
+    <div class="osw"><div class="lg">A</div><div class="nm">Apex Build Co.<span>Free trial · 9 days</span></div></div>
+    <div class="ni" data-r="dashboard" onclick="appRoute('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</div>
+    <div class="ni" data-r="projects" onclick="appRoute('projects')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/></svg>Projects</div>
+    <div class="ni" data-r="contacts" onclick="appRoute('contacts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-8 0v2"/><circle cx="12" cy="7" r="4"/></svg>Contacts</div>
+    <div class="nsep">Money</div>
+    <div class="ni" data-r="proposals" onclick="appRoute('proposals')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>Proposals</div>
+    <div class="ni" data-r="invoices" onclick="appRoute('invoices')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Invoices</div>
+    <div class="ni" data-r="catalog" onclick="appRoute('catalog')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Cost catalog</div>
+    <div class="nsep">Plan</div>
+    <div class="ni" data-r="schedule" onclick="appRoute('schedule')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Schedule</div>
+    <div class="ni" data-r="ai" onclick="appRoute('ai')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 013 3v1a3 3 0 01-1 5 3 3 0 013 3v1a3 3 0 11-6 0v-1a3 3 0 013-3 3 3 0 01-1-5V5a3 3 0 01-3-3z"/></svg>AI assistant</div>
+    <div class="sf"><div class="ni" data-r="settings" onclick="appRoute('settings')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1l2-1.6-2-3.4-2.4 1a7 7 0 00-1.7-1l-.4-2.5h-4l-.4 2.5a7 7 0 00-1.7 1l-2.4-1-2 3.4L5 11a7 7 0 000 2l-2 1.6 2 3.4 2.4-1a7 7 0 001.7 1l.4 2.5h4l.4-2.5a7 7 0 001.7-1l2.4 1 2-3.4-2-1.6a7 7 0 00.1-1z"/></svg>Settings</div>
+      <div class="uc"><div class="a">NR</div><div class="nm">Nolan R.<span>nolan@apexbuild.co</span></div></div></div>
+  </aside>
+  <div><div class="tbar"><button class="menu-btn" onclick="document.getElementById('sb').classList.toggle('open')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+    <div class="srch"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><input placeholder="Search projects, contacts, invoices…"></div><div style="flex:1"></div>
+    <button class="btn btn-primary btn-sm" onclick="appRoute('projects')">+ New project</button><button class="ib"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg></button></div>
+    <main class="main" id="appMain"></main></div>
+</div></div>
+
+<script>
+const DATA={
+  projects:[
+    {id:"p1",name:"Maple Street Kitchen Remodel",client:"Dana Whitfield",trade:"Remodel",status:"active",address:"412 Maple St, Portland OR",value:48200,billed:18400,costs:11950,progress:61,finish:"Jun 14",icon:"🍳"},
+    {id:"p2",name:"Oakwood ADU Build",client:"Marcus Lee",trade:"New build",status:"active",address:"88 Oakwood Ave, Portland OR",value:184500,billed:62000,costs:51200,progress:34,finish:"Sep 2",icon:"🏠"},
+    {id:"p3",name:"Ridgeline Roof Replacement",client:"Priya Anand",trade:"Roofing",status:"bid",address:"19 Ridgeline Dr, Beaverton OR",value:27800,billed:0,costs:0,progress:0,finish:"—",icon:"🔨"},
+    {id:"p4",name:"Beacon Hill Second Story",client:"Tom Becker",trade:"Addition",status:"plan",address:"230 Beacon Hill Rd, Portland OR",value:96400,billed:0,costs:0,progress:0,finish:"—",icon:"📐"}],
+  contacts:[
+    {name:"Dana Whitfield",type:"Client",company:"—",email:"dana.w@email.com",phone:"(503) 555-0142",projects:1},
+    {name:"Marcus Lee",type:"Client",company:"—",email:"m.lee@email.com",phone:"(503) 555-0188",projects:1},
+    {name:"Summit Plumbing",type:"Sub",company:"Summit Plumbing LLC",email:"ops@summitplumb.co",phone:"(503) 555-0210",projects:3},
+    {name:"Peak Electric",type:"Sub",company:"Peak Electric Inc.",email:"dispatch@peakelec.co",phone:"(503) 555-0277",projects:4},
+    {name:"TileWorks",type:"Vendor",company:"TileWorks Supply",email:"orders@tileworks.co",phone:"(503) 555-0301",projects:2},
+    {name:"Priya Anand",type:"Client",company:"—",email:"priya.a@email.com",phone:"(503) 555-0411",projects:1}],
+  budget:{sections:[
+    {name:"Demolition",items:[{code:"1.1",name:"Demo & disposal",qty:1,unit:"LS",cost:3200}]},
+    {name:"Cabinetry & millwork",items:[{code:"2.1",name:"Custom cabinets",qty:18,unit:"LF",cost:520},{code:"2.2",name:"Kitchen island",qty:1,unit:"EA",cost:4200}]},
+    {name:"Countertops",items:[{code:"3.1",name:"Quartz slab + install",qty:62,unit:"SF",cost:95}]},
+    {name:"Plumbing",items:[{code:"4.1",name:"Rough-in + fixtures",qty:1,unit:"LS",cost:5600}]},
+    {name:"Electrical",items:[{code:"5.1",name:"Rough-in + fixtures",qty:1,unit:"LS",cost:4800}]},
+    {name:"Finishes",items:[{code:"6.1",name:"Tile backsplash",qty:48,unit:"SF",cost:32},{code:"6.2",name:"Paint",qty:1,unit:"LS",cost:2400}]}]},
+  proposal:{status:"draft",signed:false,signedBy:"",signedAt:""},
+  tasks:[{name:"Site prep",start:0,days:3,crit:true},{name:"Demolition",start:3,days:4,crit:true},{name:"Rough plumbing",start:7,days:5,crit:true},{name:"Rough electrical",start:7,days:4,crit:false},{name:"Cabinets",start:12,days:6,crit:true},{name:"Countertops",start:18,days:3,crit:true},{name:"Finishes",start:21,days:5,crit:true}],
+  totalDays:30,today:13,
+  invoices:[{id:"INV-001",project:"Maple Street Kitchen",client:"Dana Whitfield",amount:7500,due:"Mar 3",status:"paid"},{id:"INV-002",project:"Maple Street Kitchen",client:"Dana Whitfield",amount:10900,due:"Apr 18",status:"paid"},{id:"INV-003",project:"Maple Street Kitchen",client:"Dana Whitfield",amount:12500,due:"Mar 28",status:"unpaid"},{id:"INV-004",project:"Oakwood ADU",client:"Marcus Lee",amount:62000,due:"May 1",status:"sent"}],
+  documents:[{name:"Floor Plan — L1.pdf",kind:"Plan",meta:"Mar 18",cls:"bd-pl"},{name:"Building Permit.pdf",kind:"Permit",meta:"Approved",cls:"bd-pe"},{name:"COI — Summit Plumbing.pdf",kind:"Insurance",meta:"Exp Dec 2026",cls:"bd-in"},{name:"Demo Photos",kind:"Photo",meta:"6 photos",cls:"bd-ph"},{name:"Framing Contract.pdf",kind:"Contract",meta:"Signed",cls:"bd-co"}],
+  takeoffs:[{name:"Kitchen floor",kind:"Area",value:"182 SF"},{name:"Backsplash run",kind:"Length",value:"24 LF"}],
+  features:[["Construction CRM","Clients, subs, and crew in one address book with a live history.","contacts"],["Budget builder","Section-by-section cost breakdown with per-line margin and live totals.","budget"],["Takeoffs","Measure plans in the browser and feed quantities into your budget.","takeoff"],["Cost catalog","Reusable cost codes behind every budget, bill, and PO.","catalog"],["Bid requests","Send one scope to every sub and compare pricing side by side.","projects"],["Proposals","Generate branded proposals from your budget; clients sign in the browser.","proposal"],["E-signatures","Built-in signing on proposals and agreements — no third-party tool.","proposal"],["Scheduling","Gantt chart with critical-path analysis so you know what's on deck.","schedule"],["Requests","RFIs, lien waivers, and change orders tracked with full history.","documents"],["Files & documents","Plans, permits, and photos organized by project.","documents"],["Client & sub portals","A passwordless portal where clients sign and pay.","proposal"],["AI assistant","Ask about any project, draft messages, surface insights.","ai"],["Client finances","Issue progress invoices tied to your project and collect.","invoices"],["Purchase orders","Send POs for signature and track ordered vs delivered.","catalog"],["Vendor finances","Track vendor bills and pay your vendors, synced to your books.","invoices"]]
+};
+const fmt=n=>"$"+Number(n).toLocaleString("en-US");
+const secTot=s=>s.items.reduce((a,i)=>a+i.qty*i.cost,0);
+const grand=()=>DATA.budget.sections.reduce((a,s)=>a+secTot(s),0);
+function top0(){window.scrollTo({top:0,behavior:'smooth'})}
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>30));
+
+/* renderers shared by landing + app */
+function gantt(el){if(!el)return;const W=DATA.totalDays;el.innerHTML=DATA.tasks.map(t=>{const l=(t.start/W*100),w=(t.days/W*100);return `<div class="grow"><div class="lab">${t.name}</div><div class="gtrk"><div class="gbar ${t.crit?'crit':''}" style="left:${l}%;width:${w}%"></div></div></div>`}).join('')+`<div class="gtoday" style="left:calc(120px + (100% - 120px)*${DATA.today/W});"><span class="tl">Today</span></div>`}
+function buildFeatGrid(){const g=document.getElementById('featGrid');if(g)g.innerHTML=DATA.features.map(f=>`<div class="aff" onclick="openApp('${f[2]}')"><div class="ic">▰</div><h4>${f[0]}</h4><p>${f[1]}</p></div>`).join('')}
+
+/* app open/close */
+let pendingTab=null;
+function openApp(r){document.getElementById('site').classList.add('hidden');document.getElementById('app').classList.remove('hidden');window.scrollTo(0,0);if(r==='project'){openProject('p1')}else appRoute(r||'dashboard')}
+function closeApp(){document.getElementById('app').classList.add('hidden');document.getElementById('site').classList.remove('hidden')}
+function openProjectTab(t){pendingTab=t;openApp();openProject('p1')}
+function appRoute(r){document.querySelectorAll('.ni').forEach(n=>n.classList.toggle('on',n.dataset.r===r));document.getElementById('sb').classList.remove('open');const m=document.getElementById('appMain');window.scrollTo(0,0);
+  if(r==='dashboard')m.innerHTML=vDash();else if(r==='projects')m.innerHTML=vProjects();else if(r==='contacts')m.innerHTML=vContacts();else if(r==='invoices')m.innerHTML=vInvoices();else if(r==='proposals')m.innerHTML=vProposals();else if(r==='catalog')m.innerHTML=vCatalog();else if(r==='schedule'){m.innerHTML=vSchedule();gantt(document.getElementById('ag1'))}else if(r==='ai'){m.innerHTML=vAI();aiScroll()}else if(r==='settings')m.innerHTML=vSettings()}
+
+function sp(s){const m={active:['p-act','● Active'],bid:['p-bid','● Bidding'],plan:['p-pln','● Planning'],closed:['p-cls','Closed']};const[c,t]=m[s]||m.closed;return `<span class="pill ${c}">${t}</span>`}
+function ip(s){const m={paid:['p-pd','● Paid'],unpaid:['p-un','● Overdue'],sent:['p-snt','● Sent'],draft:['p-drf','Draft']};const[c,t]=m[s]||m.draft;return `<span class="pill ${c}">${t}</span>`}
+
+function vDash(){const unpaid=DATA.invoices.filter(i=>i.status==='unpaid').reduce((a,i)=>a+i.amount,0);const active=DATA.projects.filter(p=>p.status==='active').length;const pipe=DATA.projects.filter(p=>p.status!=='active').reduce((a,p)=>a+p.value,0);
+  return `<div class="bks" onclick="closeApp()">← Back to site</div><div class="ph"><div><h1>Dashboard</h1><div class="sub">Tuesday, March 24 · Here's what needs your attention.</div></div><button class="btn btn-dark btn-sm" onclick="appRoute('ai')">Ask the assistant</button></div>
+  <div class="sg"><div class="stat"><div class="ic" style="background:var(--brand-100)">🏗️</div><div class="k">Active projects</div><div class="v">${active}</div><div class="d up">2 in build phase</div></div>
+  <div class="stat"><div class="ic" style="background:var(--danger-soft)">⚠️</div><div class="k">Overdue invoices</div><div class="v">${fmt(unpaid)}</div><div class="d dn">1 · 3 days late</div></div>
+  <div class="stat"><div class="ic" style="background:var(--accent-soft)">📋</div><div class="k">Open bids</div><div class="v">${fmt(pipe)}</div><div class="d fl">2 proposals pending</div></div>
+  <div class="stat"><div class="ic" style="background:var(--ok-soft)">📈</div><div class="k">Collected (MTD)</div><div class="v">$18.4k</div><div class="d up">+12% vs last month</div></div></div>
+  <div class="tc"><div class="card"><div class="ch2"><h3>Active projects</h3><a style="font-size:.85rem;color:var(--brand);font-weight:600;cursor:pointer" onclick="appRoute('projects')">View all →</a></div>
+    <table><thead><tr><th>Project</th><th>Client</th><th>Status</th><th class="r">Progress</th><th>Finish</th></tr></thead><tbody>${DATA.projects.map(p=>`<tr onclick="openProject('${p.id}')"><td><div class="wa"><span style="font-size:1.2rem">${p.icon}</span><b>${p.name}</b></div></td><td>${p.client}</td><td>${sp(p.status)}</td><td class="r mono">${p.progress}%</td><td>${p.finish}</td></tr>`).join('')}</tbody></table></div>
+  <div class="card"><div class="ch2"><h3>From the assistant</h3></div><div class="cb"><div style="display:flex;gap:.6rem;margin-bottom:1rem"><div class="avt" style="background:var(--brand);color:#fff;border-radius:9px">R</div><div style="font-size:.9rem;line-height:1.55"><b>Maple Street</b> deposit (INV-003, $7,500) is 3 days late and the build starts soon — worth a nudge. <b>Oakwood ADU</b> framing inspection is Thursday.</div></div>
+    <div class="kv"><span class="k">Upcoming deadline</span><span class="v">Framing inspection · Thu</span></div><div class="kv"><span class="k">Awaiting signature</span><span class="v">Beacon Hill proposal</span></div><div class="kv" style="border:none"><span class="k">Needs a bid</span><span class="v">Ridgeline Roof</span></div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:1rem;width:100%;justify-content:center" onclick="appRoute('ai')">Open assistant</button></div></div></div>`}
+
+function vProjects(){return `<div class="bks" onclick="closeApp()">← Back to site</div><div class="ph"><div><h1>Projects</h1><div class="sub">${DATA.projects.length} projects</div></div><button class="btn btn-primary btn-sm">+ New project</button></div>
+  <div class="card"><table><thead><tr><th>Project</th><th>Client</th><th>Trade</th><th>Status</th><th class="r">Contract</th><th class="r">Progress</th></tr></thead><tbody>${DATA.projects.map(p=>`<tr onclick="openProject('${p.id}')"><td><div class="wa"><span style="font-size:1.3rem">${p.icon}</span><div><b>${p.name}</b><div style="font-size:.78rem;color:var(--text-3)">${p.address}</div></div></div></td><td>${p.client}</td><td>${p.trade}</td><td>${sp(p.status)}</td><td class="r mono">${fmt(p.value)}</td><td class="r mono">${p.progress}%</td></tr>`).join('')}</tbody></table></div>`}
+
+let CP='p1',CT='overview';
+function openProject(id){CP=id;CT=pendingTab||'overview';pendingTab=null;document.querySelectorAll('.ni').forEach(n=>n.classList.toggle('on',n.dataset.r==='projects'));renderProj()}
+function setTab(t){CT=t;renderProj()}
+function renderProj(){const p=DATA.projects.find(x=>x.id===CP);const tabs=['overview','takeoff','budget','proposal','schedule','documents','requests','invoices'];const lab={overview:'Overview',takeoff:'Plans & takeoffs',budget:'Budget',proposal:'Proposal',schedule:'Schedule',documents:'Documents',requests:'Requests',invoices:'Invoices'};const m=document.getElementById('appMain');window.scrollTo(0,0);
+  m.innerHTML=`<div class="bks" onclick="appRoute('projects')">← All projects</div><div class="pj"><div><h1>${p.icon} ${p.name}</h1><div class="meta"><span>👤 ${p.client}</span><span>📍 ${p.address}</span><span>🔨 ${p.trade}</span>${sp(p.status)}</div></div><div style="display:flex;gap:.5rem"><button class="btn btn-ghost btn-sm" onclick="setTab('budget')">Edit budget</button><button class="btn btn-dark btn-sm" onclick="setTab('proposal')">View proposal</button></div></div>
+  <div class="tabs">${tabs.map(t=>`<div class="tab ${t===CT?'on':''}" onclick="setTab('${t}')">${lab[t]}</div>`).join('')}</div><div id="tc"></div>`;renderTab()}
+function renderTab(){const c=document.getElementById('tc');const p=DATA.projects.find(x=>x.id===CP);
+  if(CT==='overview')c.innerHTML=`<div class="tc"><div class="card"><div class="ch2"><h3>Project summary</h3></div><div class="cb"><div class="kv"><span class="k">Contract value</span><span class="v mono">${fmt(p.value)}</span></div><div class="kv"><span class="k">Billed to date</span><span class="v mono">${fmt(p.billed)}</span></div><div class="kv"><span class="k">Costs out</span><span class="v mono">${fmt(p.costs)}</span></div><div class="kv"><span class="k">Est. profit</span><span class="v mono" style="color:var(--ok)">${fmt(p.value-p.costs)}</span></div><div class="kv" style="border:none"><span class="k">Progress</span><span class="v">${p.progress}% · finish ${p.finish}</span></div></div></div>
+    <div class="card"><div class="ch2"><h3>Recent activity</h3></div><div class="cb"><div class="act"><div class="ad"></div><div>Proposal signed by ${p.client}<div class="at">Mar 18 · 2:14 PM</div></div></div><div class="act"><div class="ad"></div><div>Invoice INV-002 paid online<div class="at">Mar 16</div></div></div><div class="act"><div class="ad"></div><div>RFI-003 resolved — panel location<div class="at">Mar 19</div></div></div><div class="act"><div class="ad"></div><div>Permit uploaded — city approved<div class="at">Mar 18</div></div></div></div></div></div>`;
+  else if(CT==='budget')c.innerHTML=rBudget();else if(CT==='proposal')c.innerHTML=rProposal();else if(CT==='takeoff'){c.innerHTML=rTakeoff();initTk()}
+  else if(CT==='schedule'){c.innerHTML=`<div class="card"><div class="ch2"><h3>Schedule · critical path</h3><div class="seg"><span class="on">Gantt</span><span>Calendar</span></div></div><div class="cb"><div class="gantt"><div class="gw"><div></div><div>W1</div><div>W2</div><div>W3</div><div>W4</div><div>W5</div><div>W6</div></div><div id="hg"></div><div class="gft"><span>7 tasks · 4 dependencies</span><span>Finish ${p.finish}</span></div></div></div></div>`;gantt(document.getElementById('hg'))}
+  else if(CT==='documents'||CT==='requests')c.innerHTML=rDocs();else if(CT==='invoices')c.innerHTML=rProjInv()}
+
+function rBudget(){let rows='';DATA.budget.sections.forEach((s,si)=>{rows+=`<tr class="bt-sec"><td colspan="6">${s.name}<span class="st mono" id="sec-${si}">${fmt(secTot(s))}</span></td></tr>`;s.items.forEach((it,ii)=>{rows+=`<tr><td class="code">${it.code}</td><td><input class="nm" value="${it.name}" oninput="upd(${si},${ii},'name',this.value)"></td><td style="width:80px"><input value="${it.qty}" oninput="upd(${si},${ii},'qty',this.value)"></td><td style="width:60px"><input value="${it.unit}" style="text-align:center" oninput="upd(${si},${ii},'unit',this.value)"></td><td style="width:110px"><input value="${it.cost}" oninput="upd(${si},${ii},'cost',this.value)"></td><td class="lt" style="width:100px" id="lt-${si}-${ii}">${fmt(it.qty*it.cost)}</td><td style="width:24px"><span class="dr" onclick="delRow(${si},${ii})">×</span></td></tr>`})});
+  return `<div class="card"><div class="ch2"><h3>Budget · Maple Street Kitchen</h3><button class="btn btn-dark btn-sm" onclick="genProp()">✨ Generate proposal</button></div><div style="overflow-x:auto"><table class="bt"><thead><tr><th>#</th><th>Item</th><th class="r">Qty</th><th>Unit</th><th class="r">Unit cost</th><th class="r">Line total</th><th></th></tr></thead><tbody>${rows}</tbody></table></div><div class="grand"><span>Total contract value</span><span class="v" id="gt">${fmt(grand())}</span></div></div><p style="font-size:.82rem;color:var(--text-3);margin-top:.8rem">Edit any quantity or unit cost — totals recalculate live.</p>`}
+function upd(si,ii,f,v){const it=DATA.budget.sections[si].items[ii];it[f]=(f==='qty'||f==='cost')?(parseFloat(v)||0):v;if(f==='qty'||f==='cost'){document.getElementById(`lt-${si}-${ii}`).textContent=fmt(it.qty*it.cost);document.getElementById(`sec-${si}`).textContent=fmt(secTot(DATA.budget.sections[si]));document.getElementById('gt').textContent=fmt(grand())}}
+function delRow(si,ii){DATA.budget.sections[si].items.splice(ii,1);renderTab()}
+function genProp(){DATA.proposal.status='draft';toast('Proposal generated from budget');setTab('proposal')}
+
+function rProposal(){const p=DATA.projects.find(x=>x.id===CP);const t=grand();const st=DATA.proposal;const badge=st.signed?'<span class="pill p-sgn">● Signed</span>':(st.status==='sent'?'<span class="pill p-snt">● Sent</span>':'<span class="pill p-drf">Draft</span>');
+  return `<div style="display:flex;gap:.6rem;margin-bottom:1rem;align-items:center">${badge}${!st.signed?`<button class="btn btn-dark btn-sm" onclick="openSign()">${st.status==='sent'?'Resend':'Send'} for signature</button>`:''}<button class="btn btn-ghost btn-sm" onclick="toast('Downloaded proposal PDF')">Download PDF</button></div>
+  <div class="prop"><div class="pt"><div class="co"><svg class="mark" style="width:34px;height:34px" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="var(--brand)"/><path d="M9 23V9h7.2c2.5 0 4.3 1.6 4.3 4.1 0 1.9-1.1 3.3-2.8 3.8L21 23h-3.3l-3-5.4H12V23H9z" fill="#fff"/></svg><div><div style="font-weight:700">Apex Build Co.</div><div style="font-size:.8rem;color:var(--text-3)">Proposal #8 · for ${p.client}</div></div></div><div class="amt">${fmt(t)}<small>Total</small></div></div>
+  <div class="pbody">${DATA.budget.sections.map(s=>`<div class="psec"><span>${s.name}</span><span class="a">${fmt(secTot(s))}</span></div>`).join('')}</div>
+  <div class="pscope"><b>Scope of work.</b> Apex Build Co. will furnish all labor, materials, and equipment to complete the kitchen remodel at ${p.address}: demolition and disposal, custom cabinetry and a new island, quartz countertops, plumbing and electrical rough-in with fixtures, tile backsplash, and paint. <i>Sample scope generated from the budget.</i></div>
+  <div class="pfoot">${st.signed?`<div class="audit"><b>✓ Signed</b> by ${st.signedBy} · ${st.signedAt}<div class="mono">Audit: IP 73.42.x.x · SHA-256 verified · sealed PDF on record</div></div>`:`<div style="font-size:.85rem;color:var(--text-3)">Awaiting client signature</div><button class="btn btn-accent btn-sm" onclick="openSign()">Preview signer view</button>`}</div></div>`}
+function openSign(){DATA.proposal.status='sent';const w=document.createElement('div');w.className='mbg';w.id='sm';w.innerHTML=`<div class="modal"><div class="mh"><h3>Sign — Client Agreement</h3><span class="x" onclick="closeSign()">×</span></div><div class="mb"><p style="font-size:.88rem;color:var(--text-2);margin-bottom:1rem">This is the passwordless signer view your client sees. Draw a signature to accept the ${fmt(grand())} proposal.</p><div class="fld"><label>Full name</label><input id="sn" value="Dana Whitfield"></div><label style="font-size:.78rem;font-weight:600;color:var(--text-2);display:block;margin-bottom:.35rem">Signature</label><canvas class="sigpad" id="sp" height="150"></canvas><div class="sr"><button class="btn btn-ghost btn-sm" onclick="clearSig()">Clear</button><button class="btn btn-primary" onclick="doSign()">Sign agreement</button></div></div></div>`;document.body.appendChild(w);setTimeout(initSig,30)}
+function closeSign(){const m=document.getElementById('sm');if(m)m.remove()}
+let sc,sd=false,si=false;
+function initSig(){const c=document.getElementById('sp');if(!c)return;c.width=c.offsetWidth;sc=c.getContext('2d');si=false;sc.strokeStyle='#0E1726';sc.lineWidth=2.4;sc.lineCap='round';sc.lineJoin='round';const P=e=>{const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return[t.clientX-r.left,t.clientY-r.top]};const D=e=>{sd=true;si=true;const[x,y]=P(e);sc.beginPath();sc.moveTo(x,y);e.preventDefault()};const M=e=>{if(!sd)return;const[x,y]=P(e);sc.lineTo(x,y);sc.stroke();e.preventDefault()};const U=()=>sd=false;c.onmousedown=D;c.onmousemove=M;window.addEventListener('mouseup',U);c.ontouchstart=D;c.ontouchmove=M;c.ontouchend=U}
+function clearSig(){if(sc){sc.clearRect(0,0,9999,9999);si=false}}
+function doSign(){if(!si){toast('Draw a signature first');return}const n=document.getElementById('sn').value||'Client';DATA.proposal.signed=true;DATA.proposal.status='signed';DATA.proposal.signedBy=n;DATA.proposal.signedAt='Mar 24, 2026 · '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});closeSign();renderTab();toast('✓ Agreement signed and saved to the record')}
+
+function rTakeoff(){return `<div class="tkw"><div><div class="tktool"><span class="tb on">▢ Area</span><span class="tb">／ Length</span><span class="tb">• Count</span><span style="margin-left:auto;font-family:var(--fm);font-size:.74rem;color:var(--text-2)">Scale 1/4" = 1'-0"</span><button class="btn btn-ghost btn-sm" onclick="clearTk()">Clear</button></div><div class="tkc"><canvas id="tkCanvas" height="380"></canvas></div></div><div class="tkp"><h4>Takeoffs</h4><div class="hint">Drag a box on the plan to measure an area. It's added below and can be pushed to the budget.</div><div id="tkList">${DATA.takeoffs.map(t=>`<div class="tki"><div><div class="nm">${t.name}</div><div class="sub">${t.kind}</div></div><div class="v">${t.value}</div></div>`).join('')}</div><button class="btn btn-dark btn-sm" style="width:100%;justify-content:center;margin-top:.6rem" onclick="pushTk()">Push to budget →</button></div></div>`}
+let tc,ts=null,tr=null;const TKS=0.11;
+function initTk(){const c=document.getElementById('tkCanvas');if(!c)return;c.width=c.offsetWidth;tc=c.getContext('2d');drawPlan();const P=e=>{const r=c.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return[t.clientX-r.left,t.clientY-r.top]};c.onmousedown=e=>{ts=P(e);tr=null};c.onmousemove=e=>{if(!ts)return;const[x,y]=P(e);tr={x:Math.min(ts[0],x),y:Math.min(ts[1],y),w:Math.abs(x-ts[0]),h:Math.abs(y-ts[1])};drawPlan()};window.addEventListener('mouseup',()=>{if(ts&&tr&&tr.w>14&&tr.h>14)addTk(tr);ts=null})}
+function drawPlan(){const c=document.getElementById('tkCanvas');if(!tc)return;const W=c.width,H=c.height;tc.clearRect(0,0,W,H);tc.strokeStyle="#1b2740";tc.lineWidth=2;tc.globalAlpha=.85;[[40,40,W*.32,150,"KITCHEN"],[W*.42,40,W*.24,H-90,"DINING"],[W*.72,40,W*.22,140,"LIVING"],[W*.72,200,W*.22,H-240,"BATH"]].forEach(([x,y,w,h,l])=>{tc.strokeRect(x,y,w,h);tc.globalAlpha=1;tc.fillStyle="#1b2740";tc.font="11px monospace";tc.fillText(l,x+8,y+18);tc.globalAlpha=.85});tc.globalAlpha=1;if(tr){tc.fillStyle="rgba(30,71,216,.16)";tc.strokeStyle="#1E47D8";tc.lineWidth=2;tc.fillRect(tr.x,tr.y,tr.w,tr.h);tc.strokeRect(tr.x,tr.y,tr.w,tr.h);const sf=Math.round(tr.w*TKS*tr.h*TKS);const lx=tr.x+tr.w/2,ly=tr.y+tr.h/2;tc.fillStyle="#0E1726";tc.fillRect(lx-28,ly-11,56,22);tc.fillStyle="#fff";tc.font="bold 12px monospace";tc.textAlign="center";tc.fillText(sf+" SF",lx,ly+4);tc.textAlign="left"}}
+function addTk(r){const sf=Math.round(r.w*TKS*r.h*TKS);DATA.takeoffs.push({name:"Area "+(DATA.takeoffs.length+1),kind:"Area",value:sf+" SF"});document.getElementById('tkList').innerHTML=DATA.takeoffs.map(t=>`<div class="tki"><div><div class="nm">${t.name}</div><div class="sub">${t.kind}</div></div><div class="v">${t.value}</div></div>`).join('');toast("Measured "+sf+" SF — added to takeoffs")}
+function clearTk(){tr=null;drawPlan()}
+function pushTk(){toast("Takeoff quantities pushed to budget");setTab('budget')}
+
+function rDocs(){return `<div class="tc"><div class="card"><div class="ch2"><h3>Files</h3><button class="btn btn-ghost btn-sm">Upload</button></div><div class="cb" style="padding:.5rem">${DATA.documents.map(d=>`<div class="fl" style="padding:.7rem"><div class="ic">${d.kind==='Photo'?'IMG':'PDF'}</div><div><div class="nm">${d.name}</div><div class="mt"><span class="bd ${d.cls}">${d.kind}</span>${d.meta}</div></div></div>`).join('')}</div></div>
+  <div class="card"><div class="ch2"><h3>Requests (RFIs)</h3></div><div class="cb"><div class="rfi" style="padding:0"><div class="hd"><span class="id">RFI-003</span><span class="spill">Responded</span></div><h4 style="margin:.3rem 0 1rem">Electrical panel location</h4><div class="rmsg"><div class="rwho">SP</div><div class="rtxt">Plans show two possible spots on page 4. Which one before rough-in tomorrow?</div></div><div class="rmsg me"><div class="rwho" style="background:var(--brand);color:#fff">You</div><div class="rtxt">Utility closet, NE corner.</div></div><div class="rres">✓ Resolved · Mar 19</div></div></div></div></div>`}
+function rProjInv(){const inv=DATA.invoices.filter(i=>i.project==='Maple Street Kitchen');return `<div class="card"><div class="ch2"><h3>Invoices</h3><button class="btn btn-dark btn-sm" onclick="toast('New progress invoice drafted from budget')">+ Progress invoice</button></div><table><thead><tr><th>Invoice</th><th>Amount</th><th>Due</th><th>Status</th><th>Sync</th></tr></thead><tbody>${inv.map(i=>`<tr><td class="mono">${i.id}</td><td class="mono">${fmt(i.amount)}</td><td>${i.due}</td><td>${ip(i.status)}</td><td>${i.status==='paid'?'<span style="font-size:.78rem;color:var(--ok)">⟳ Synced</span>':'<span style="font-size:.78rem;color:var(--text-3)">—</span>'}</td></tr>`).join('')}</tbody></table></div>`}
+
+function vContacts(){return `<div class="bks" onclick="closeApp()">← Back to site</div><div class="ph"><div><h1>Contacts</h1><div class="sub">Clients, subs, and vendors</div></div><button class="btn btn-primary btn-sm">+ Add contact</button></div><div class="card"><table><thead><tr><th>Name</th><th>Type</th><th>Company</th><th>Email</th><th>Phone</th><th class="r">Projects</th></tr></thead><tbody>${DATA.contacts.map(c=>`<tr><td><div class="wa"><span class="avt">${c.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</span><b>${c.name}</b></div></td><td><span class="pill ${c.type==='Client'?'p-pln':c.type==='Sub'?'p-bid':'p-cls'}">${c.type}</span></td><td>${c.company}</td><td>${c.email}</td><td class="mono">${c.phone}</td><td class="r">${c.projects}</td></tr>`).join('')}</tbody></table></div>`}
+function vInvoices(){const out=DATA.invoices.filter(i=>i.status==='unpaid').reduce((a,i)=>a+i.amount,0);const paid=DATA.invoices.filter(i=>i.status==='paid').reduce((a,i)=>a+i.amount,0);return `<div class="bks" onclick="closeApp()">← Back to site</div><div class="ph"><div><h1>Invoices</h1><div class="sub">Client finances · synced to your books</div></div><button class="btn btn-primary btn-sm">+ New invoice</button></div><div class="sg" style="grid-template-columns:repeat(3,1fr)"><div class="stat"><div class="k">Collected</div><div class="v">${fmt(paid)}</div><div class="d up">2 paid</div></div><div class="stat"><div class="k">Outstanding</div><div class="v">${fmt(out)}</div><div class="d dn">1 overdue</div></div><div class="stat"><div class="k">Awaiting</div><div class="v">$62k</div><div class="d fl">1 sent</div></div></div><div class="card"><table><thead><tr><th>Invoice</th><th>Project</th><th>Client</th><th class="r">Amount</th><th>Due</th><th>Status</th></tr></thead><tbody>${DATA.invoices.map(i=>`<tr><td class="mono">${i.id}</td><td>${i.project}</td><td>${i.client}</td><td class="r mono">${fmt(i.amount)}</td><td>${i.due}</td><td>${ip(i.status)}</td></tr>`).join('')}</tbody></table></div>`}
+function vProposals(){const rows=[['PRO-008','Maple Street Kitchen','Dana Whitfield',48200,DATA.proposal.signed?'signed':'sent'],['PRO-007','Beacon Hill Second Story','Tom Becker',96400,'sent'],['PRO-006','Oakwood ADU','Marcus Lee',184500,'signed']];return `<div class="bks" onclick="closeApp()">← Back to site</div><div class="ph"><div><h1>Proposals</h1><div class="sub">Branded agreements out for signature</div></div></div><div class="card"><table><thead><tr><th>Proposal</th><th>Project</th><th>Client</th><th class="r">Total</th><th>Status</th></tr></thead><tbody>${rows.map(r=>`<tr onclick="openProject('p1');setTab('proposal')"><td class="mono">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="r mono">${fmt(r[3])}</td><td><span class="pill ${r[4]==='signed'?'p-sgn':'p-snt'}">● ${r[4]==='signed'?'Signed':'Sent'}</span></td></tr>`).join('')}</tbody></table></div>`}
+function vCatalog(){const it=[['100','Demo & disposal','LS',3200],['210','Custom cabinetry','LF',520],['215','Cabinet island','EA',4200],['310','Quartz counter + install','SF',95],['410','Plumbing rough + fixtures','LS',5600],['510','Electrical rough + fixtures','LS',4800],['610','Tile, installed','SF',32],['620','Interior paint','LS',2400]];return `<div class="bks" onclick="closeApp()">← Back to site</div><div class="ph"><div><h1>Cost catalog</h1><div class="sub">Reusable cost codes behind every budget, bill, and PO</div></div><button class="btn btn-primary btn-sm">+ Add code</button></div><div class="card"><table><thead><tr><th>Code</th><th>Item</th><th>Unit</th><th class="r">Default cost</th><th>Mapped to</th></tr></thead><tbody>${it.map(i=>`<tr><td class="mono">${i[0]}</td><td><b>${i[1]}</b></td><td>${i[2]}</td><td class="r mono">${fmt(i[3])}</td><td><span style="font-size:.78rem;color:var(--text-3)">⟳ Accounting item</span></td></tr>`).join('')}</tbody></table></div>`}
+function vSchedule(){return `<div class="bks" onclick="closeApp()">← Back to site</div><div class="ph"><div><h1>Schedule</h1><div class="sub">Maple Street Kitchen · critical path</div></div><div class="seg"><span class="on">Gantt</span><span>Calendar</span></div></div><div class="card"><div class="cb"><div class="gantt"><div class="gw"><div></div><div>W1</div><div>W2</div><div>W3</div><div>W4</div><div>W5</div><div>W6</div></div><div id="ag1"></div><div class="gft"><span>7 tasks · 4 dependencies · <span style="color:var(--brand)">■</span> critical</span><span>Finish Jun 14</span></div></div></div></div>`}
+function vSettings(){return `<div class="bks" onclick="closeApp()">← Back to site</div><div class="ph"><div><h1>Settings</h1><div class="sub">Apex Build Co.</div></div></div><div class="stg">
+  <div class="card"><div class="ch2"><h3>Company & branding</h3></div><div class="cb"><div class="fld"><label>Company name</label><input value="Apex Build Co."></div><div class="fld"><label>Brand color (used on proposals & invoices)</label><input value="#1E47D8"></div><button class="btn btn-dark btn-sm" onclick="toast('Branding saved')">Save</button></div></div>
+  <div class="card"><div class="ch2"><h3>Team</h3></div><div class="cb"><div class="intg"><div class="wa"><span class="avt">NR</span><div><div class="nm">Nolan Rossi</div><div style="font-size:.74rem;color:var(--text-3)">Owner</div></div></div><span class="pill p-act">Active</span></div><div class="intg"><div class="wa"><span class="avt">JM</span><div><div class="nm">Jamie Ortiz</div><div style="font-size:.74rem;color:var(--text-3)">Estimator · +$20/mo</div></div></div><span class="pill p-act">Active</span></div><button class="btn btn-ghost btn-sm" style="margin-top:.8rem">+ Invite teammate</button></div></div>
+  <div class="card"><div class="ch2"><h3>Integrations</h3></div><div class="cb"><div class="intg"><div class="nm">QuickBooks Online</div><button class="btn btn-ghost btn-sm">Connect</button></div><div class="intg"><div class="nm">Stripe payments</div><button class="btn btn-ghost btn-sm">Connect</button></div><div class="intg" style="border:none"><div class="nm">AI assistant (Claude)</div><span class="pill p-act">Enabled</span></div></div></div>
+  <div class="card"><div class="ch2"><h3>Billing</h3></div><div class="cb"><div class="kv"><span class="k">Plan</span><span class="v">Reno · one plan</span></div><div class="kv"><span class="k">Seats</span><span class="v">2 ($20/extra)</span></div><div class="kv" style="border:none"><span class="k">Status</span><span class="v" style="color:var(--accent)">Free trial · 9 days left</span></div></div></div>
+</div>`}
+
+/* AI assistant */
+const AIQA=[
+  [/deposit|invoice|paid|owe|outstanding/i,"The <b>Maple Street</b> deposit (INV-003, $7,500) went out Mar 3 and is still unpaid — 3 days past due, with the build starting Mar 28. Want me to draft a friendly reminder to Dana?",`<div class="ref"><b>INV-003</b> · $7,500 · <span style="color:var(--danger)">Overdue</span></div>`],
+  [/schedule|behind|late|finish|critical/i,"Maple Street is 61% complete and on track to finish <b>Jun 14</b>. Cabinets → countertops → finishes are all on the critical path, so any slip there moves the finish date. Rough electrical has 1 day of float.",``],
+  [/budget|cost|profit|margin/i,"Maple Street's contract is $48,200 with $11,950 in costs out so far — about $36k of gross margin remaining. The biggest line is cabinetry & millwork at $13,560.",``],
+  [/oakwood|adu/i,"Oakwood ADU is 34% complete, $62k billed of $184.5k. The framing inspection is booked for Thursday — I'll remind you Wednesday afternoon.",``]
+];
+let aiHist=[{r:'bot',t:"Hi — I'm your Reno assistant. Ask me anything about your projects, invoices, or schedule, and I'll pull the details."}];
+function vAI(){return `<div class="bks" onclick="closeApp()">← Back to site</div><div class="ph"><div><h1>AI assistant</h1><div class="sub">Watches every project, invoice, and deadline</div></div></div>
+  <div class="aip"><div class="aif" id="aif">${aiHist.map(m=>aiMsg(m)).join('')}</div>
+  <div class="aisg">${["Any overdue invoices?","Is Maple Street on schedule?","What's my margin on Maple Street?","What's happening with Oakwood?"].map(s=>`<button onclick="aiAsk('${s.replace(/'/g,"\\'")}')">${s}</button>`).join('')}</div>
+  <div class="aii"><input id="aiIn" placeholder="Ask anything about your projects…" onkeydown="if(event.key==='Enter')aiSend()"><button class="btn btn-primary btn-sm" onclick="aiSend()">Send</button></div></div>`}
+function aiMsg(m){return `<div class="aim ${m.r==='me'?'me':'bot'}"><div class="av ${m.r==='me'?'usr':'bot'}">${m.r==='me'?'NR':'R'}</div><div class="aibub">${m.t}${m.ref||''}</div></div>`}
+function aiScroll(){const f=document.getElementById('aif');if(f)f.scrollTop=f.scrollHeight}
+function aiAsk(q){document.getElementById('aiIn').value=q;aiSend()}
+function aiSend(){const inp=document.getElementById('aiIn');const q=inp.value.trim();if(!q)return;aiHist.push({r:'me',t:q});inp.value='';let ans=["I can see all four of your projects. Try asking about overdue invoices, a project's schedule, or your margin on a job.",""];for(const[re,a,ref]of AIQA){if(re.test(q)){ans=[a,ref||""];break}}aiHist.push({r:'bot',t:ans[0],ref:ans[1]});document.getElementById('aif').innerHTML=aiHist.map(m=>aiMsg(m)).join('');aiScroll()}
+
+/* init */
+buildFeatGrid();gantt(document.getElementById('lg'));
+</script>
+</body>
+</html>
