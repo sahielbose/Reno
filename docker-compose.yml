@@ -1,0 +1,25 @@
+# Local development database for Reno.
+#   docker compose up -d      # start Postgres on localhost:5433
+#   docker compose down       # stop (data persists in the named volume)
+# DATABASE_URL is set in .env (see .env.example).
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: reno-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: reno
+      POSTGRES_PASSWORD: reno
+      POSTGRES_DB: reno
+    ports:
+      - "5433:5432"
+    volumes:
+      - reno-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reno -d reno"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  reno-pgdata:
