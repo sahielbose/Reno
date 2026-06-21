@@ -1,11 +1,19 @@
+import { getOrgContext, can } from "@/lib/auth";
+import { listContactsWithProjects } from "@/server/repositories/contact";
 import { PageHeader } from "@/components/app/shell/page-header";
-import { ComingSoon } from "@/components/app/shell/coming-soon";
+import { ContactsView } from "@/components/app/contacts/contacts-view";
 
-export default function Page() {
+export default async function ContactsPage() {
+  const { orgId, role } = await getOrgContext();
+  const contacts = await listContactsWithProjects(orgId);
+
   return (
     <>
       <PageHeader title="Contacts" subtitle="Clients, subs, and vendors." />
-      <ComingSoon title="Contacts" note="Built in Phase 7." />
+      <ContactsView
+        contacts={contacts}
+        canDelete={can(role, "contact.delete")}
+      />
     </>
   );
 }

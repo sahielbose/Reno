@@ -70,3 +70,34 @@ export async function deleteProject(orgId: string, id: string) {
   await db.project.findFirstOrThrow({ where: { id, orgId } });
   return db.project.delete({ where: { id } });
 }
+
+/** Everything needed to compute a project's financials (budget, invoices +
+ *  payments, vendor bills, schedule). */
+const financialsInclude = {
+  client: true,
+  budgets: {
+    include: { sections: { include: { items: true } } },
+  },
+  invoices: { include: { payments: true } },
+  vendorBills: true,
+  scheduleTasks: true,
+} satisfies Prisma.ProjectInclude;
+
+export function listProjectsWithFinancials(orgId: string) {
+  return db.project.findMany({
+    where: { orgId },
+    include: financialsInclude,
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export function getProjectWithFinancials(orgId: string, id: string) {
+  return db.project.findFirst({
+    where: { id, orgId },
+    include: financialsInclude,
+  });
+}
+
+export type ProjectWithFinancials = Prisma.ProjectGetPayload<{
+  include: typeof financialsInclude;
+}>;

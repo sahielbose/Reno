@@ -1,9 +1,17 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
+
+const empty = fileURLToPath(new URL("./tests/stubs/empty.ts", import.meta.url));
 
 export default defineConfig({
   // Resolve the @/* alias from tsconfig natively (no extra plugin needed).
   resolve: {
     tsconfigPaths: true,
+    // Next's RSC markers throw outside a server bundle; stub them in tests.
+    alias: {
+      "server-only": empty,
+      "client-only": empty,
+    },
   },
   test: {
     environment: "jsdom",
