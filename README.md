@@ -64,19 +64,31 @@ pnpm dev          # start the dev server (Turbopack) at http://localhost:3000
 
 A husky pre-commit hook runs `lint-staged` (ESLint + Prettier) on staged files.
 
+## Local database
+
+Phases 5+ need Postgres. Start it and seed:
+
+```bash
+docker compose up -d   # Postgres 16 on localhost:5433 (see .env.example)
+cp .env.example .env   # then set DATABASE_URL
+pnpm db:migrate        # apply migrations
+pnpm db:seed           # seed the demo org (Apex Build Co.)
+pnpm db:studio         # browse the data
+```
+
 ## Build status
 
 This project is built phase by phase per `Reno_BUILD_PLAN.md`.
+`pnpm lint && pnpm typecheck && pnpm test && pnpm build` are green on every push (CI-verified).
 
-### ✅ Phase 1 — Repo scaffold & tooling
+- **✅ Phase 1 — Scaffold & tooling.** Next.js 15.5 App Router + TS, Tailwind v4, shadcn/ui, ESLint/Prettier/husky, Vitest + Playwright, GitHub Actions CI.
+- **✅ Phase 2 — Design system.** Reno "blueprint" tokens, Space Grotesk/Inter/JetBrains Mono, the full primitive set (Button, Card, Badge, Input, Table, Tabs, Dialog, Dropdown, Toast), and a `/styleguide` reference page.
+- **✅ Phase 3 — App shell & routing.** `(marketing)`/`(app)` route groups, the dark sidebar + topbar, responsive mobile drawer, and every `/app/*` route stubbed and navigable.
+- **✅ Phase 4 — Marketing landing.** The full landing page ported from the prototype — hero + bid→built spine, product-mock feature sections, all-features grid, who-we-serve, CTA, footer. Every CTA opens the app; no pricing, no demo.
+- **✅ Phase 5 — Data model.** Prisma schema (34 tables, multi-tenant), local Postgres, a prototype-accurate seed, zod validators, and an org-scoped repository layer.
+- **✅ Phase 6 — Auth & tenancy.** A dev `AuthProvider` (cookie session over the seeded data), `getOrgContext()` scoping, role gates (owner/admin/member), a working org switcher, and tenant-isolation tests.
 
-- Next.js 15.5 App Router app (TypeScript, `src/` dir, `@/*` import alias, pnpm).
-- Tailwind CSS v4 + shadcn/ui base config.
-- ESLint 9 (flat config) + Prettier + lint-staged + husky pre-commit.
-- Vitest (unit) + Playwright (e2e) with sample tests.
-- GitHub Actions CI: lint · typecheck · test · build, plus a Playwright job.
-
-`pnpm dev` runs; `pnpm lint && pnpm typecheck && pnpm test && pnpm build` are green.
+_Next: Phase 7 — Contacts / CRM._
 
 ## License
 

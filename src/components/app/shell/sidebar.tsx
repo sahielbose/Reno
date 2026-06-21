@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import type { Session } from "@/lib/auth/provider";
 import { navSections, settingsNavItem, type NavItem } from "@/lib/nav";
 import { RenoWordmark } from "@/components/brand/logo";
 import { OrgSwitcher } from "@/components/app/shell/org-switcher";
@@ -41,7 +42,13 @@ function NavLink({
   );
 }
 
-export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
+export function Sidebar({
+  session,
+  onNavigate,
+}: {
+  session: Session;
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
 
   return (
@@ -55,7 +62,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         <RenoWordmark tile="#ffffff" glyph="var(--color-brand)" />
       </Link>
 
-      <OrgSwitcher />
+      <OrgSwitcher org={session.org} orgs={session.orgs} />
 
       <nav className="flex-1 overflow-y-auto">
         {navSections.map((section, i) => (
@@ -83,7 +90,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
           active={isActive(pathname, settingsNavItem.href)}
           onNavigate={onNavigate}
         />
-        <UserMenu />
+        <UserMenu user={session.user} role={session.role} />
       </div>
     </aside>
   );

@@ -3,19 +3,26 @@
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
+import type { Session } from "@/lib/auth/provider";
 import { Sidebar } from "@/components/app/shell/sidebar";
 import { Topbar } from "@/components/app/shell/topbar";
 
 /** The authenticated app frame: a sticky dark sidebar on desktop, a slide-in
  *  drawer on mobile, and the topbar + scrolling main column. */
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({
+  session,
+  children,
+}: {
+  session: Session;
+  children: React.ReactNode;
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <div className="bg-paper min-h-screen md:grid md:grid-cols-[236px_1fr]">
       {/* Desktop sidebar */}
       <div className="sticky top-0 hidden h-screen md:block">
-        <Sidebar />
+        <Sidebar session={session} />
       </div>
 
       {/* Mobile drawer + overlay */}
@@ -33,7 +40,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           mobileOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <Sidebar onNavigate={() => setMobileOpen(false)} />
+        <Sidebar session={session} onNavigate={() => setMobileOpen(false)} />
       </div>
 
       {/* Main column */}
