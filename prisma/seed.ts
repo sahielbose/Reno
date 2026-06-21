@@ -11,7 +11,9 @@ const d = (s: string) => new Date(s + "T12:00:00Z");
 
 async function main() {
   // ── Reset demo data ────────────────────────────────────────────────────────
-  await db.organization.deleteMany({ where: { slug: "apex-build-co" } });
+  await db.organization.deleteMany({
+    where: { slug: { in: ["apex-build-co", "cedarline-renovations"] } },
+  });
   await db.user.deleteMany({
     where: { email: { in: ["nolan@apexbuild.co", "jamie@apexbuild.co"] } },
   });
@@ -426,6 +428,51 @@ async function main() {
       { orgId: org.id, projectId: maple.id, actorId: owner.id, verb: "paid", target: "Invoice INV-002", createdAt: d("2026-04-16") }, // prettier-ignore
       { orgId: org.id, projectId: maple.id, actorId: owner.id, verb: "resolved", target: "RFI-003", createdAt: d("2026-03-19") }, // prettier-ignore
     ],
+  });
+
+  // ── A second org (so the org switcher meaningfully changes data) ─────────────
+  const org2 = await db.organization.create({
+    data: {
+      name: "Cedarline Renovations",
+      slug: "cedarline-renovations",
+      primaryColor: "#1E47D8",
+      address: "Seattle, WA",
+    },
+  });
+  await db.membership.create({
+    data: { userId: owner.id, orgId: org2.id, role: "ADMIN" },
+  });
+  const helena = await db.contact.create({
+    data: {
+      orgId: org2.id,
+      name: "Helena Cruz",
+      type: "CLIENT",
+      email: "helena@email.com",
+      phone: "(206) 555-0190",
+    },
+  });
+  await db.project.create({
+    data: {
+      orgId: org2.id,
+      clientId: helena.id,
+      name: "Lakeview Bath Remodel",
+      address: "77 Lakeview Ter, Seattle WA",
+      trade: "Remodel",
+      status: "ACTIVE",
+      icon: "🛁",
+      startDate: d("2026-04-01"),
+      targetEndDate: d("2026-06-30"),
+    },
+  });
+  await db.project.create({
+    data: {
+      orgId: org2.id,
+      clientId: helena.id,
+      name: "Greenwood Deck Build",
+      trade: "Carpentry",
+      status: "BIDDING",
+      icon: "🪵",
+    },
   });
 
   const counts = {
