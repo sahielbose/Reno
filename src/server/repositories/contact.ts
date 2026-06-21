@@ -63,6 +63,36 @@ export async function deleteContact(orgId: string, id: string) {
   return db.contact.delete({ where: { id } });
 }
 
+/** Contacts with their linked client projects (for the list + detail drawer). */
+export function listContactsWithProjects(
+  orgId: string,
+  opts?: { type?: ContactType; search?: string },
+) {
+  const where: Prisma.ContactWhereInput = { orgId };
+  if (opts?.type) where.type = opts.type;
+  if (opts?.search) {
+    where.OR = [
+      { name: { contains: opts.search, mode: "insensitive" } },
+      { company: { contains: opts.search, mode: "insensitive" } },
+      { email: { contains: opts.search, mode: "insensitive" } },
+    ];
+  }
+  return db.contact.findMany({
+    where,
+    include: {
+      clientProjects: {
+        select: { id: true, name: true, status: true, icon: true },
+        orderBy: { createdAt: "desc" },
+      },
+    },
+    orderBy: { name: "asc" },
+  });
+}
+
+export type ContactWithProjects = Awaited<
+  ReturnType<typeof listContactsWithProjects>
+>[number];
+
 export function countContactsByType(orgId: string) {
   return db.contact.groupBy({
     by: ["type"],

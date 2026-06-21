@@ -16,3 +16,11 @@ export const contactInputSchema = z.object({
 });
 
 export type ContactInput = z.infer<typeof contactInputSchema>;
+
+/** Form-shaped schema: tags are edited as one comma-separated string in the UI
+ *  and split into a string[] on submit. Used by the client form resolver. */
+export const contactFormSchema = contactInputSchema
+  .omit({ tags: true })
+  .extend({ tags: z.string().optional() });
+
+export type ContactFormValues = z.infer<typeof contactFormSchema>;
