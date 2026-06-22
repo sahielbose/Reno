@@ -1,8 +1,8 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Sparkles, Download } from "lucide-react";
+import { Sparkles, Download, Send, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
 import type { ProposalStatus } from "@prisma/client";
@@ -12,6 +12,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { RenoMark } from "@/components/brand/logo";
 import { generateProposalAction } from "@/server/actions/proposal";
+import { sendForSignatureAction } from "@/server/actions/esign";
 
 export type ProposalData = {
   id: string;
@@ -47,6 +48,7 @@ export function ProposalView({
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const [signerUrl, setSignerUrl] = useState<string | null>(null);
 
   function generate() {
     startTransition(async () => {
@@ -55,6 +57,20 @@ export function ProposalView({
         toast.success("Proposal generated from budget");
         router.refresh();
       } else {
+        toast.error(result.error);
+      }
+    });
+  }
+
+  function send() {
+    if (!proposal) return;
+    startTransition(async () => {
+      const result = await sendForSignatureAction(projectId, proposal.id);
+      if (result.ok && result.data) {
+        setSignerUrl(result.data.url);
+        toast.success("Sent for signature");
+        router.refresh();
+      } else if (!result.ok) {
         toast.error(result.error);
       }
     });
@@ -106,7 +122,29 @@ export function ProposalView({
         >
           <Download className="size-4" /> Download PDF
         </ButtonLink>
+        {!signed && (
+          <Button variant="dark" size="sm" onClick={send} disabled={pending}>
+            <Send className="size-4" />
+            {proposal.status === "DRAFT" ? "Send for signature" : "Resend"}
+          </Button>
+        )}
       </div>
+
+      {signerUrl && (
+        <div className="rounded-reno border-brand-100 bg-brand-100/40 flex flex-wrap items-center justify-between gap-3 border px-4 py-3 text-sm">
+          <span className="text-text-2">
+            Passwordless signer link ready — your client signs from any device.
+          </span>
+          <ButtonLink
+            href={signerUrl}
+            target="_blank"
+            variant="primary"
+            size="sm"
+          >
+            <ExternalLink className="size-4" /> Open signer view
+          </ButtonLink>
+        </div>
+      )}
 
       <Card className="max-w-3xl overflow-hidden p-0">
         <div className="border-line flex items-start justify-between border-b px-8 py-6">
