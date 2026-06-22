@@ -48,3 +48,6 @@ next-env.d.ts
 
 # local Claude tooling state
 .claude/
+
+# local file storage (Phase 13)
+.uploads/
