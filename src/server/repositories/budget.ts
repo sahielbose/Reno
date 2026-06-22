@@ -112,3 +112,31 @@ export async function deleteSection(orgId: string, id: string) {
   });
   return db.budgetSection.delete({ where: { id } });
 }
+
+/** Insert a cost-catalog item into a budget section as a linked line item. */
+export async function insertCatalogItem(
+  orgId: string,
+  sectionId: string,
+  catalogItemId: string,
+) {
+  const [section, item] = await Promise.all([
+    db.budgetSection.findFirstOrThrow({
+      where: { id: sectionId, budget: { orgId } },
+      include: { _count: { select: { items: true } } },
+    }),
+    db.costCatalogItem.findFirstOrThrow({
+      where: { id: catalogItemId, orgId },
+    }),
+  ]);
+  return db.budgetLineItem.create({
+    data: {
+      sectionId,
+      costCatalogItemId: item.id,
+      name: item.name,
+      qty: 1,
+      unit: item.unit,
+      unitCost: item.defaultUnitCost,
+      order: section._count.items,
+    },
+  });
+}
