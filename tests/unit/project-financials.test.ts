@@ -93,10 +93,10 @@ describe("aggregateDashboard", () => {
     financials: Partial<ProjectFinancials>,
     invoices: { status: string; amount: number }[] = [],
   ): ProjectSummary => ({
-    project: project({
+    project: {
       status,
-      invoices: invoices.map((i) => ({ ...i, payments: [] })),
-    } as unknown as Partial<ProjectWithFinancials>),
+      invoices,
+    } as unknown as ProjectSummary["project"],
     financials: { ...zero, ...financials },
   });
 

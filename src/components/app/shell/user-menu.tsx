@@ -34,6 +34,7 @@ export function UserMenu({ user, role }: { user: SessionUser; role: Role }) {
         render={
           <button
             type="button"
+            suppressHydrationWarning
             className="flex w-full items-center gap-2.5 rounded-[10px] p-2 text-left transition-colors hover:bg-white/[0.07]"
           />
         }

@@ -1,4 +1,8 @@
 import { getSession } from "@/lib/auth";
+import {
+  listNotifications,
+  unreadCount as countUnread,
+} from "@/server/repositories/notification";
 import { AppShell } from "@/components/app/shell/app-shell";
 
 // Authed, per-org pages are always rendered on demand (never statically).
@@ -30,5 +34,27 @@ export default async function AppLayout({
     );
   }
 
-  return <AppShell session={session}>{children}</AppShell>;
+  const orgId = session.org.id;
+  const [notifs, unread] = await Promise.all([
+    listNotifications(orgId),
+    countUnread(orgId),
+  ]);
+  const notifications = notifs.map((n) => ({
+    id: n.id,
+    kind: n.kind,
+    title: n.title,
+    body: n.body,
+    createdAt: n.createdAt.toISOString(),
+    read: n.readAt != null,
+  }));
+
+  return (
+    <AppShell
+      session={session}
+      notifications={notifications}
+      unreadCount={unread}
+    >
+      {children}
+    </AppShell>
+  );
 }

@@ -6,14 +6,19 @@ import { cn } from "@/lib/utils";
 import type { Session } from "@/lib/auth/provider";
 import { Sidebar } from "@/components/app/shell/sidebar";
 import { Topbar } from "@/components/app/shell/topbar";
+import type { NotifItem } from "@/components/app/shell/notification-bell";
 
 /** The authenticated app frame: a sticky dark sidebar on desktop, a slide-in
  *  drawer on mobile, and the topbar + scrolling main column. */
 export function AppShell({
   session,
+  notifications,
+  unreadCount,
   children,
 }: {
   session: Session;
+  notifications: NotifItem[];
+  unreadCount: number;
   children: React.ReactNode;
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -45,7 +50,11 @@ export function AppShell({
 
       {/* Main column */}
       <div className="flex min-w-0 flex-col">
-        <Topbar onMenuClick={() => setMobileOpen(true)} />
+        <Topbar
+          onMenuClick={() => setMobileOpen(true)}
+          notifications={notifications}
+          unreadCount={unreadCount}
+        />
         <main className="mx-auto w-full max-w-[1200px] flex-1 px-5 py-7 md:px-8">
           {children}
         </main>

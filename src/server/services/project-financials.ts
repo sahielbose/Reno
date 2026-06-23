@@ -1,5 +1,7 @@
 import "server-only";
 
+import type { InvoiceStatus, ProjectStatus } from "@prisma/client";
+
 import { budgetTotal, sum, round2 } from "@/lib/money";
 import {
   listProjectsWithFinancials,
@@ -57,10 +59,46 @@ export function computeFinancials(p: ProjectWithFinancials): ProjectFinancials {
   };
 }
 
+/**
+ * A plain, fully-serializable projection of a project for client components —
+ * scalar fields plus the lightweight invoice info the dashboard aggregates.
+ * Crucially carries NO Prisma Decimal instances (those can't cross the
+ * server→client boundary).
+ */
+export type ProjectListItem = {
+  id: string;
+  name: string;
+  icon: string | null;
+  status: ProjectStatus;
+  address: string | null;
+  trade: string | null;
+  targetEndDate: Date | null;
+  client: { id: string; name: string } | null;
+  invoices: { status: InvoiceStatus; amount: number }[];
+};
+
 export type ProjectSummary = {
-  project: ProjectWithFinancials;
+  project: ProjectListItem;
   financials: ProjectFinancials;
 };
+
+/** Strip a loaded project down to plain, client-safe fields. */
+function lighten(p: ProjectWithFinancials): ProjectListItem {
+  return {
+    id: p.id,
+    name: p.name,
+    icon: p.icon ?? null,
+    status: p.status,
+    address: p.address ?? null,
+    trade: p.trade ?? null,
+    targetEndDate: p.targetEndDate ?? null,
+    client: p.client ? { id: p.client.id, name: p.client.name } : null,
+    invoices: p.invoices.map((i) => ({
+      status: i.status,
+      amount: Number(i.amount),
+    })),
+  };
+}
 
 export async function getProjectFinancials(
   orgId: string,
@@ -68,7 +106,7 @@ export async function getProjectFinancials(
 ): Promise<ProjectSummary | null> {
   const project = await getProjectWithFinancials(orgId, projectId);
   if (!project) return null;
-  return { project, financials: computeFinancials(project) };
+  return { project: lighten(project), financials: computeFinancials(project) };
 }
 
 export async function listProjectSummaries(
@@ -76,7 +114,7 @@ export async function listProjectSummaries(
 ): Promise<ProjectSummary[]> {
   const projects = await listProjectsWithFinancials(orgId);
   return projects.map((project) => ({
-    project,
+    project: lighten(project),
     financials: computeFinancials(project),
   }));
 }

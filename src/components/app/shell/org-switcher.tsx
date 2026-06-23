@@ -39,6 +39,7 @@ export function OrgSwitcher({
           <button
             type="button"
             disabled={pending}
+            suppressHydrationWarning
             className="mb-4 flex w-full items-center gap-2.5 rounded-xl bg-white/5 p-2.5 text-left transition-colors hover:bg-white/10 disabled:opacity-60"
           />
         }

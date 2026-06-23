@@ -1,10 +1,22 @@
 "use client";
 
-import { Menu, Search, Bell, Plus } from "lucide-react";
+import { Menu, Search, Plus } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui/button";
+import {
+  NotificationBell,
+  type NotifItem,
+} from "@/components/app/shell/notification-bell";
 
-export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
+export function Topbar({
+  onMenuClick,
+  notifications,
+  unreadCount,
+}: {
+  onMenuClick?: () => void;
+  notifications: NotifItem[];
+  unreadCount: number;
+}) {
   return (
     <header className="border-line sticky top-0 z-20 flex items-center gap-4 border-b bg-white/85 px-4 py-3.5 backdrop-blur-md md:px-6">
       <button
@@ -32,13 +44,10 @@ export function Topbar({ onMenuClick }: { onMenuClick?: () => void }) {
         <span className="hidden sm:inline">New project</span>
       </ButtonLink>
 
-      <button
-        type="button"
-        aria-label="Notifications"
-        className="border-line text-text-2 hover:bg-paper grid size-[38px] flex-none place-items-center rounded-[10px] border bg-white"
-      >
-        <Bell className="size-[18px]" />
-      </button>
+      <NotificationBell
+        notifications={notifications}
+        unreadCount={unreadCount}
+      />
     </header>
   );
 }
