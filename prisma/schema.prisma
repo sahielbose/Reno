@@ -170,6 +170,7 @@ model Organization {
   activityLogs     ActivityLog[]
   notifications    Notification[]
   accessTokens     AccessToken[]
+  takeoffs         Takeoff[]
 }
 
 model User {
@@ -252,6 +253,7 @@ model Project {
   vendorBills    VendorBill[]
   bidRequests    BidRequest[]
   plans          Plan[]
+  takeoffs       Takeoff[]
   aiThreads      AIThread[]
 
   @@index([orgId, status])
@@ -360,6 +362,8 @@ model PlanPage {
 
 model Takeoff {
   id         String      @id @default(cuid())
+  orgId      String
+  projectId  String
   planPageId String?
   kind       TakeoffKind
   label      String
@@ -368,9 +372,12 @@ model Takeoff {
   geometry   Json?
   createdAt  DateTime    @default(now())
 
-  planPage     PlanPage?       @relation(fields: [planPageId], references: [id], onDelete: SetNull)
+  org            Organization    @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  project        Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  planPage       PlanPage?       @relation(fields: [planPageId], references: [id], onDelete: SetNull)
   budgetLineItem BudgetLineItem?
 
+  @@index([projectId])
   @@index([planPageId])
 }
 
