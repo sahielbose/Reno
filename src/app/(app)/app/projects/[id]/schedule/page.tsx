@@ -1,5 +1,17 @@
-import { ComingSoon } from "@/components/app/shell/coming-soon";
+import { getOrgContext } from "@/lib/auth";
+import { listScheduleTasks } from "@/server/repositories/schedule";
+import { buildSchedule } from "@/server/services/schedule";
+import { ScheduleBoard } from "@/components/app/schedule/schedule-board";
 
-export default function Page() {
-  return <ComingSoon title="Schedule" note="Built in Phase 15." />;
+export default async function SchedulePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const { orgId } = await getOrgContext();
+  const rows = await listScheduleTasks(orgId, id);
+  const view = buildSchedule(rows);
+
+  return <ScheduleBoard projectId={id} view={view} />;
 }
