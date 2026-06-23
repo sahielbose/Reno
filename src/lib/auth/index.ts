@@ -12,7 +12,11 @@ export type {
 } from "@/lib/auth/provider";
 export * from "@/lib/auth/roles";
 
-/** The active auth provider. Phase 18 returns a Clerk-backed provider. */
+/**
+ * The active auth provider. Cookie-based dev auth in development; for
+ * production implement AuthProvider over Clerk and gate on CLERK_SECRET_KEY
+ * here (see GO_LIVE.md). Tenancy/roles resolution is unchanged either way.
+ */
 export function getAuthProvider(): AuthProvider {
   return devAuthProvider;
 }

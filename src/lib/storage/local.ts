@@ -38,7 +38,11 @@ export const localStorage: Storage = {
   },
 };
 
-/** The active storage backend. Phase 19 returns an S3/R2 adapter. */
+/**
+ * The active storage backend. Local disk in dev; for production implement the
+ * Storage interface with an S3/R2 adapter and gate on S3_BUCKET here (see
+ * GO_LIVE.md). The rest of the app is unaffected.
+ */
 export function getStorage(): Storage {
   return localStorage;
 }
