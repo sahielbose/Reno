@@ -2,7 +2,7 @@ import { formatCurrency } from "@/lib/format";
 import type { AIProvider, AssistantContext, ChatMessage } from "./provider";
 
 /** Deterministic, rule-based assistant that answers from real org data.
- *  No network, no keys — a believable preview until live AI lands. */
+ *  No network, no keys - a believable preview until live AI lands. */
 export function stubReply(message: string, ctx: AssistantContext): string {
   const q = message.toLowerCase();
   const active = ctx.projects.filter((p) => p.status === "ACTIVE");
@@ -10,7 +10,7 @@ export function stubReply(message: string, ctx: AssistantContext): string {
   const match = (...words: string[]) => words.some((w) => q.includes(w));
 
   if (!message.trim()) {
-    return `Hi — I'm Reno's assistant. Ask me about project status, what's outstanding, schedule risk, or drafting a proposal.`;
+    return `Hi - I'm Reno's assistant. Ask me about project status, what's outstanding, schedule risk, or drafting a proposal.`;
   }
 
   if (match("hello", "hi ", "hey", "what can you")) {
@@ -26,7 +26,7 @@ export function stubReply(message: string, ctx: AssistantContext): string {
   ) {
     const owed = ctx.projects.filter((p) => p.outstanding > 0);
     if (!owed.length)
-      return `Nothing outstanding right now — every invoice is collected. 🎉`;
+      return `Nothing outstanding right now - every invoice is collected.`;
     const lines = owed
       .map((p) => `• ${p.name}: ${formatCurrency(p.outstanding)} outstanding`)
       .join("\n");
@@ -43,7 +43,7 @@ export function stubReply(message: string, ctx: AssistantContext): string {
       ? `Watch these on the schedule:\n${behind.join(
           "\n",
         )}\n\nOpen a project's Schedule tab to see the critical path in amber.`
-      : `Schedules look healthy — active projects are tracking above 60% on their critical paths.`;
+      : `Schedules look healthy - active projects are tracking above 60% on their critical paths.`;
   }
 
   if (match("proposal", "scope", "estimate", "quote", "bid")) {
@@ -51,13 +51,13 @@ export function stubReply(message: string, ctx: AssistantContext): string {
     return p
       ? `I can turn ${p.name}'s budget (${formatCurrency(
           p.contractValue,
-        )} contract value) into a client proposal. Open the project's Proposal tab and hit "Generate from budget" — the scope and section totals carry over automatically.`
+        )} contract value) into a client proposal. Open the project's Proposal tab and hit "Generate from budget" - the scope and section totals carry over automatically.`
       : `Create a project and build its budget first, then I'll draft a proposal from it.`;
   }
 
   if (match("summar", "status", "how is", "how are", "overview", "going")) {
     if (!ctx.projects.length)
-      return `No projects yet — create one to get started.`;
+      return `No projects yet - create one to get started.`;
     const named = ctx.projects.find((p) => q.includes(p.name.toLowerCase()));
     const targets = named ? [named] : ctx.projects.slice(0, 4);
     const lines = targets
@@ -85,7 +85,7 @@ export function stubReply(message: string, ctx: AssistantContext): string {
     ctx.projects.length === 1 ? "" : "s"
   }, ${formatCurrency(ctx.collected)} collected, ${formatCurrency(
     ctx.overdueAmount,
-  )} overdue. I can summarize a project, flag what's outstanding, check schedule risk, or help draft a proposal. (This is a local preview — connect a key in Phase 19 for full AI.)`;
+  )} overdue. I can summarize a project, flag what's outstanding, check schedule risk, or help draft a proposal. (This is a local preview - connect a key in Phase 19 for full AI.)`;
 }
 
 export const stubProvider: AIProvider = {

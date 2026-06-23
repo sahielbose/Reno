@@ -14,7 +14,7 @@ export function createAccessToken(input: {
   return db.accessToken.create({ data: input });
 }
 
-/** Resolve a token (public — no org scope; the token carries its own orgId). */
+/** Resolve a token (public - no org scope; the token carries its own orgId). */
 export function getAccessToken(token: string) {
   return db.accessToken.findUnique({ where: { token } });
 }

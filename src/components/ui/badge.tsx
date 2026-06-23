@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * Badge / Pill — ported from the prototype's `.pill` status chips. Color
+ * Badge / Pill - ported from the prototype's `.pill` status chips. Color
  * variants map to Reno's status palette; `dot` adds the leading ● marker the
  * prototype uses on live statuses.
  */

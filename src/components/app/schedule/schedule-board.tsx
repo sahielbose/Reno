@@ -30,7 +30,7 @@ import type { ScheduleView, GanttTask } from "@/server/services/schedule";
 
 const DAY = 86_400_000;
 
-/** Shared control classes — matches the Input look for native selects. */
+/** Shared control classes - matches the Input look for native selects. */
 const controlClass = cn(
   "border-line text-foreground flex w-full rounded-[9px] border bg-white px-[0.8rem] py-[0.6rem] text-[0.92rem] transition-colors outline-none",
   "placeholder:text-text-3",
@@ -93,7 +93,7 @@ function useGanttLayout(view: ScheduleView): {
 }
 
 /**
- * ScheduleBoard — the project Schedule panel: a critical-path Gantt chart over
+ * ScheduleBoard - the project Schedule panel: a critical-path Gantt chart over
  * the project's task window, plus an editable task list with inline progress,
  * dependency linking, and an add-task dialog. All mutations run through the
  * schedule server actions inside transitions.
@@ -143,7 +143,7 @@ export function ScheduleBoard({
           <div className="flex flex-col items-center justify-center gap-3 px-5 py-16 text-center">
             <CalendarRange className="text-text-3 size-8" aria-hidden="true" />
             <p className="text-text-2 text-sm font-medium">
-              No tasks yet — add the first to build your schedule.
+              No tasks yet - add the first to build your schedule.
             </p>
             <Button variant="outline" onClick={() => setAddOpen(true)}>
               + Add task
@@ -381,7 +381,7 @@ function TaskRow({
         <p className="text-text-3 mt-0.5 text-xs">
           {task.start || task.end ? (
             <span className="font-mono tabular-nums">
-              {formatDate(task.start)} – {formatDate(task.end)}
+              {formatDate(task.start)} - {formatDate(task.end)}
             </span>
           ) : (
             "No dates"
@@ -565,7 +565,7 @@ function AddTaskDialog({
           <Field
             label="Percent complete"
             htmlFor="task-percent"
-            description="0–100"
+            description="0-100"
           >
             <Input
               id="task-percent"

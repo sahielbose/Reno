@@ -148,6 +148,9 @@ model Organization {
   // Integrations (wired Phase 18-20)
   stripeCustomerId String?
   qboRealmId       String?
+  // AI: bring-your-own Anthropic key, used for the assistant + all AI features.
+  aiApiKey         String?
+  aiModel          String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 

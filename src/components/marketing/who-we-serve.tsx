@@ -1,17 +1,19 @@
+import { Building2, Hammer, HardHat, Home } from "lucide-react";
+
 import { Section, SectionHeading } from "@/components/marketing/section";
 
 const TRADES = [
   {
-    icon: "🏠",
+    Icon: Home,
     title: "Home builders",
     copy: "New construction, lot to keys.",
   },
-  { icon: "🛠️", title: "Remodelers", copy: "Kitchens, baths, ADUs." },
-  { icon: "🏚️", title: "Roofers", copy: "Tear-offs and repairs." },
-  { icon: "🏗️", title: "Commercial", copy: "TIs and ground-up." },
+  { Icon: Hammer, title: "Remodelers", copy: "Kitchens, baths, ADUs." },
+  { Icon: HardHat, title: "Roofers", copy: "Tear-offs and repairs." },
+  { Icon: Building2, title: "Commercial", copy: "TIs and ground-up." },
 ] as const;
 
-/** "Who we serve" — trades grid (`#serve`). */
+/** "Who we serve" - trades grid (`#serve`). */
 export function WhoWeServe() {
   return (
     <Section id="serve" tight>
@@ -26,9 +28,9 @@ export function WhoWeServe() {
           >
             <div
               aria-hidden="true"
-              className="bg-brand-100 text-brand mb-[0.7rem] grid h-[38px] w-[38px] place-items-center rounded-[10px] text-[1.1rem]"
+              className="bg-brand-100 text-brand mb-[0.7rem] grid h-[38px] w-[38px] place-items-center rounded-[10px]"
             >
-              {trade.icon}
+              <trade.Icon className="size-5" />
             </div>
             <h4 className="text-[1rem]">{trade.title}</h4>
             <p className="text-text-2 mt-[0.35rem] text-[0.86rem]">

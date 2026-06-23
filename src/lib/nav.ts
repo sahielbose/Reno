@@ -24,7 +24,7 @@ export type NavSection = {
   items: NavItem[];
 };
 
-/** Primary app navigation — mirrors the prototype sidebar, extended so every
+/** Primary app navigation - mirrors the prototype sidebar, extended so every
  *  destination in the route map is reachable from the skeleton. */
 export const navSections: NavSection[] = [
   {

@@ -1,4 +1,4 @@
-/** Public, passwordless surfaces (signer / pay / portal) — no app shell. */
+/** Public, passwordless surfaces (signer / pay / portal) - no app shell. */
 export default function PublicLayout({
   children,
 }: {

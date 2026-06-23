@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-/** Input — ported from the prototype's `.fld input` (hairline border, brand
+/** Input - ported from the prototype's `.fld input` (hairline border, brand
  *  focus ring, 9px radius). */
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** The Reno "R" mark — a rounded square with the wordmark glyph. `fill` controls
+/** The Reno "R" mark - a rounded square with the wordmark glyph. `fill` controls
  *  the tile color (brand by default; pass white-on-dark via props). */
 export function RenoMark({
   className,

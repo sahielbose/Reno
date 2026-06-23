@@ -17,7 +17,7 @@ const STEPS: Step[] = [
   { k: "Schedule", v: "61%", s: "finish Jun 14" },
 ];
 
-/** Marketing hero — the dark top of the landing page plus the "spine" card. */
+/** Marketing hero - the dark top of the landing page plus the "spine" card. */
 export function Hero() {
   return (
     <header className="bg-ink relative overflow-hidden px-5 pt-[165px] pb-20 text-center text-white">
@@ -73,7 +73,7 @@ export function Hero() {
         </h1>
 
         <p className="mx-auto mt-[1.3rem] mb-8 max-w-[560px] text-[1.2rem] text-white/[0.78]">
-          Estimate, win, schedule, and get paid — one place for the whole job,
+          Estimate, win, schedule, and get paid - one place for the whole job,
           so you stop stitching together spreadsheets, texts, and sticky notes.
         </p>
 

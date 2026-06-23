@@ -26,9 +26,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Reno — Run every job from bid to built",
+  title: "Reno - Run every job from bid to built",
   description:
-    "Construction management software for modern builders. Estimate, win, schedule, and get paid — one place for the whole job, from first bid to final build.",
+    "Construction management software for modern builders. Estimate, win, schedule, and get paid - one place for the whole job, from first bid to final build.",
 };
 
 export default function RootLayout({

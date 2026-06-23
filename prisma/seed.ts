@@ -96,7 +96,7 @@ async function main() {
       address: "412 Maple St, Portland OR",
       trade: "Remodel",
       status: "ACTIVE",
-      icon: "🍳",
+      icon: "",
       startDate: d("2026-03-01"),
       targetEndDate: d("2026-06-14"),
     },
@@ -109,7 +109,7 @@ async function main() {
       address: "88 Oakwood Ave, Portland OR",
       trade: "New build",
       status: "ACTIVE",
-      icon: "🏠",
+      icon: "",
       startDate: d("2026-02-10"),
       targetEndDate: d("2026-09-02"),
     },
@@ -122,7 +122,7 @@ async function main() {
       address: "19 Ridgeline Dr, Beaverton OR",
       trade: "Roofing",
       status: "BIDDING",
-      icon: "🔨",
+      icon: "",
     },
   });
   const beacon = await db.project.create({
@@ -133,7 +133,7 @@ async function main() {
       address: "230 Beacon Hill Rd, Portland OR",
       trade: "Addition",
       status: "PLANNING",
-      icon: "📐",
+      icon: "",
     },
   });
 
@@ -229,7 +229,7 @@ async function main() {
     });
     return b;
   };
-  await simpleBudget(oakwood.id, "Oakwood ADU", "ADU — lot to keys", "LS", 184500); // prettier-ignore
+  await simpleBudget(oakwood.id, "Oakwood ADU", "ADU - lot to keys", "LS", 184500); // prettier-ignore
   await simpleBudget(ridgeline.id, "Ridgeline Roof", "Tear-off + re-roof", "SQ", 27800); // prettier-ignore
   await simpleBudget(beacon.id, "Beacon Hill", "Second-story addition", "LS", 96400); // prettier-ignore
 
@@ -377,9 +377,9 @@ async function main() {
     string,
     "PLAN" | "PERMIT" | "INSURANCE" | "PHOTO" | "CONTRACT",
   ][] = [
-    ["Floor Plan — L1.pdf", "PLAN"],
+    ["Floor Plan - L1.pdf", "PLAN"],
     ["Building Permit.pdf", "PERMIT"],
-    ["COI — Summit Plumbing.pdf", "INSURANCE"],
+    ["COI - Summit Plumbing.pdf", "INSURANCE"],
     ["Demo Photos", "PHOTO"],
     ["Framing Contract.pdf", "CONTRACT"],
   ];
@@ -407,7 +407,7 @@ async function main() {
           {
             authorName: "Summit Plumbing",
             authorRole: "SUB",
-            body: "Plans show two possible spots on page 4. Which one — need it before rough-in tomorrow.",
+            body: "Plans show two possible spots on page 4. Which one - need it before rough-in tomorrow.",
             createdAt: d("2026-03-18"),
           },
           {
@@ -459,7 +459,7 @@ async function main() {
       address: "77 Lakeview Ter, Seattle WA",
       trade: "Remodel",
       status: "ACTIVE",
-      icon: "🛁",
+      icon: "",
       startDate: d("2026-04-01"),
       targetEndDate: d("2026-06-30"),
     },
@@ -471,7 +471,7 @@ async function main() {
       name: "Greenwood Deck Build",
       trade: "Carpentry",
       status: "BIDDING",
-      icon: "🪵",
+      icon: "",
     },
   });
 

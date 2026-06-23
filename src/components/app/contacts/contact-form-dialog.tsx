@@ -44,7 +44,7 @@ const TYPE_OPTION_LABEL: Record<(typeof CONTACT_TYPES)[number], string> = {
   CREW: "Crew",
 };
 
-/** Shared control classes — matches the Input look for the select & textarea. */
+/** Shared control classes - matches the Input look for the select & textarea. */
 const controlClass = cn(
   "border-line text-foreground flex w-full rounded-[9px] border bg-white px-[0.8rem] py-[0.6rem] text-[0.92rem] transition-colors outline-none",
   "placeholder:text-text-3",
@@ -83,7 +83,7 @@ export function ContactFormDialog({
     reset,
     formState: { errors },
   } = useForm<FormValues>({
-    // zod v4 schema vs @hookform/resolvers bundled v4.0 types — runtime is fine.
+    // zod v4 schema vs @hookform/resolvers bundled v4.0 types - runtime is fine.
     resolver: zodResolver(
       contactFormSchema as never,
     ) as unknown as import("react-hook-form").Resolver<FormValues>,

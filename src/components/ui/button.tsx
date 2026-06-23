@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 /**
- * Reno Button — pill-shaped, ported from the prototype's `.btn` family.
+ * Reno Button - pill-shaped, ported from the prototype's `.btn` family.
  * Variants: primary (brand), dark (ink), ghost (outline), ghostOnDark,
  * accent (amber), secondary, link. For navigation use ButtonLink (a styled
  * Next.js Link) rather than `render={<Link/>}`, which keeps native button

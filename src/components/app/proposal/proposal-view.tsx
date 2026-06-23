@@ -84,7 +84,7 @@ export function ProposalView({
         </span>
         <p className="font-display text-lg font-semibold">No proposal yet</p>
         <p className="text-text-2 max-w-sm text-sm">
-          Generate a branded proposal from this project&apos;s budget — the
+          Generate a branded proposal from this project&apos;s budget - the
           numbers carry straight over.
         </p>
         <Button variant="dark" onClick={generate} disabled={pending}>
@@ -133,7 +133,7 @@ export function ProposalView({
       {signerUrl && (
         <div className="rounded-reno border-brand-100 bg-brand-100/40 flex flex-wrap items-center justify-between gap-3 border px-4 py-3 text-sm">
           <span className="text-text-2">
-            Passwordless signer link ready — your client signs from any device.
+            Passwordless signer link ready - your client signs from any device.
           </span>
           <ButtonLink
             href={signerUrl}

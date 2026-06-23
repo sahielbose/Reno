@@ -129,7 +129,7 @@ export function AssistantChat({
 
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-[230px_1fr]">
-      {/* LEFT — new chat + thread list */}
+      {/* LEFT - new chat + thread list */}
       <aside className="flex flex-col gap-3">
         <Button
           variant="primary"
@@ -188,7 +188,7 @@ export function AssistantChat({
         </nav>
       </aside>
 
-      {/* RIGHT — chat panel */}
+      {/* RIGHT - chat panel */}
       <Card className="flex min-h-[70vh] flex-col overflow-hidden">
         <div
           ref={scrollRef}

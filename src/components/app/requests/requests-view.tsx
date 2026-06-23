@@ -76,7 +76,7 @@ const STATUS_LABEL: Record<RequestStatus, string> = {
   RESOLVED: "Resolved",
 };
 
-/** Shared control classes — matches the Input look for the select & textarea. */
+/** Shared control classes - matches the Input look for the select & textarea. */
 const controlClass = cn(
   "border-line text-foreground flex w-full rounded-[9px] border bg-white px-[0.8rem] py-[0.6rem] text-[0.92rem] transition-colors outline-none",
   "placeholder:text-text-3",
@@ -120,7 +120,7 @@ export function RequestsView({
           <div className="flex flex-col items-center justify-center gap-3 px-5 py-16 text-center">
             <Inbox className="text-text-3 size-8" aria-hidden="true" />
             <p className="text-text-2 text-sm font-medium">
-              No requests yet — open an RFI, change order, or lien waiver.
+              No requests yet - open an RFI, change order, or lien waiver.
             </p>
             <Button variant="outline" onClick={() => setCreateOpen(true)}>
               + New request

@@ -367,7 +367,7 @@ export function TakeoffTool({
           <CardContent className="space-y-2">
             {takeoffs.length === 0 && (
               <p className="text-text-3 text-sm">
-                No takeoffs yet — measure on the plan to get started.
+                No takeoffs yet - measure on the plan to get started.
               </p>
             )}
             {takeoffs.map((t) => (

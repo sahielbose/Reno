@@ -144,12 +144,14 @@ export function ProjectsTable({
                   >
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <span
-                          className="text-[1.15rem] leading-none"
-                          aria-hidden
-                        >
-                          {s.project.icon ?? "📁"}
-                        </span>
+                        {s.project.icon ? (
+                          <span
+                            className="text-[1.15rem] leading-none"
+                            aria-hidden
+                          >
+                            {s.project.icon}
+                          </span>
+                        ) : null}
                         <div className="min-w-0">
                           <div className="text-foreground font-semibold">
                             {s.project.name}
@@ -163,10 +165,10 @@ export function ProjectsTable({
                       </div>
                     </TableCell>
                     <TableCell className="text-text-2">
-                      {s.project.client?.name ?? "—"}
+                      {s.project.client?.name ?? "-"}
                     </TableCell>
                     <TableCell className="text-text-2">
-                      {s.project.trade ?? "—"}
+                      {s.project.trade ?? "-"}
                     </TableCell>
                     <TableCell>
                       <ProjectStatusBadge status={s.project.status} />

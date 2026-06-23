@@ -67,5 +67,5 @@ export function generateScope(
     names.length > 1
       ? `${names.slice(0, -1).join(", ")}, and ${names[names.length - 1]}`
       : (names[0] ?? "the agreed scope");
-  return `${orgName} will furnish all labor, materials, and equipment to complete the work at ${address ?? "the project address"}: ${list}. Sample scope generated from the budget — edit as needed.`;
+  return `${orgName} will furnish all labor, materials, and equipment to complete the work at ${address ?? "the project address"}: ${list}. Sample scope generated from the budget - edit as needed.`;
 }

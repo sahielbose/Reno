@@ -20,7 +20,7 @@ export interface ProjectFinancials {
   costsOut: number;
   /** Profit = contract value − costs out. */
   profit: number;
-  /** Schedule progress, duration-weighted % complete (0–100). */
+  /** Schedule progress, duration-weighted % complete (0-100). */
   progress: number;
 }
 
@@ -60,7 +60,7 @@ export function computeFinancials(p: ProjectWithFinancials): ProjectFinancials {
 }
 
 /**
- * A plain, fully-serializable projection of a project for client components —
+ * A plain, fully-serializable projection of a project for client components -
  * scalar fields plus the lightweight invoice info the dashboard aggregates.
  * Crucially carries NO Prisma Decimal instances (those can't cross the
  * server→client boundary).

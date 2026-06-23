@@ -60,7 +60,7 @@ export function SignerView({
         <CheckCircle2 className="text-ok mx-auto size-14" />
         <h1 className="font-display mt-4 text-2xl font-semibold">All signed</h1>
         <p className="text-text-2 mt-2">
-          Thanks, {name.split(" ")[0]} — your agreement for{" "}
+          Thanks, {name.split(" ")[0]} - your agreement for{" "}
           <b>{proposal.projectName}</b> is on the record. {proposal.orgName} has
           been notified.
         </p>

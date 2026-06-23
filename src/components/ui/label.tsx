@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-/** Label — ported from the prototype's `.fld label`. */
+/** Label - ported from the prototype's `.fld label`. */
 function Label({ className, ...props }: React.ComponentProps<"label">) {
   return (
     <label

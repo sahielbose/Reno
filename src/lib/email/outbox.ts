@@ -4,13 +4,13 @@ import type { Mailer } from "@/lib/email/interface";
 import { createResendMailer } from "@/lib/email/resend";
 
 /**
- * Dev mailer — logs to the server console ("outbox") instead of sending.
+ * Dev mailer - logs to the server console ("outbox") instead of sending.
  * In production, Resend takes over behind this same Mailer interface.
  */
 export const consoleMailer: Mailer = {
   async send(message) {
     console.log(
-      `\n📧 [outbox] → ${message.to}\n   ${message.subject}\n   ${message.body}\n`,
+      `\n[outbox] → ${message.to}\n   ${message.subject}\n   ${message.body}\n`,
     );
   },
 };

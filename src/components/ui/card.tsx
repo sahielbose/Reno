@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-/** Card — the prototype's `.card` (white surface, hairline border, soft shadow). */
+/** Card - the prototype's `.card` (white surface, hairline border, soft shadow). */
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -16,7 +16,7 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-/** CardHeader — the `.ch2` row: title left, action right, hairline below. */
+/** CardHeader - the `.ch2` row: title left, action right, hairline below. */
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -50,7 +50,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"p">) {
   );
 }
 
-/** CardContent — the `.cb` body padding. */
+/** CardContent - the `.cb` body padding. */
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div data-slot="card-content" className={cn("p-5", className)} {...props} />

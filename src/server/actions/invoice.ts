@@ -68,7 +68,7 @@ export async function createProgressInvoiceAction(
     }
     const invoice = await repo.createInvoice(orgId, projectId, {
       lineItems: [
-        { description: `Progress billing — ${pct}% of contract`, amount },
+        { description: `Progress billing - ${pct}% of contract`, amount },
       ],
       status: "SENT",
     });

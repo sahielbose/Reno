@@ -4,7 +4,7 @@ import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 
 import { cn } from "@/lib/utils";
 
-/** Tabs — ported from the prototype's `.tabs` underline style: a hairline rule
+/** Tabs - ported from the prototype's `.tabs` underline style: a hairline rule
  *  under a scrollable row of triggers, the active one inked brand with a
  *  brand underline. */
 function Tabs({ className, ...props }: TabsPrimitive.Root.Props) {

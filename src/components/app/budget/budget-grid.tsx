@@ -260,7 +260,7 @@ export function BudgetGrid({
                       className="group border-b border-[#f1f3f8]"
                     >
                       <td className="text-text-3 px-3 py-1 font-mono text-[0.72rem]">
-                        {item.code ?? "—"}
+                        {item.code ?? "-"}
                       </td>
                       <td className="px-1 py-1">
                         <input
@@ -425,7 +425,7 @@ export function BudgetGrid({
           <Plus className="size-4" /> Add section
         </Button>
         <p className="text-text-3 text-[0.82rem]">
-          Edit any quantity or cost — totals recalculate live and save
+          Edit any quantity or cost - totals recalculate live and save
           automatically.
         </p>
       </div>

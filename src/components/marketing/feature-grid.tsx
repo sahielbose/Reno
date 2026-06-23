@@ -66,7 +66,7 @@ const FEATURES: Feature[] = [
   },
   {
     title: "E-signatures",
-    desc: "Built-in signing on proposals and agreements — no third-party tool.",
+    desc: "Built-in signing on proposals and agreements - no third-party tool.",
     href: "/app/projects/p1/proposal",
     Icon: PenLine,
   },
@@ -124,7 +124,7 @@ const FEATURES: Feature[] = [
 export function FeatureGrid() {
   return (
     <Section id="allfeat" tight>
-      <SectionHeading title="Built to work together — useful on its own">
+      <SectionHeading title="Built to work together - useful on its own">
         Start with what you need today. Add the rest as your operation grows.
       </SectionHeading>
 

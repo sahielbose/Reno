@@ -28,7 +28,7 @@ export function FeatureSchedule() {
         }
       >
         Lay out tasks, link dependencies, and Reno computes the critical path
-        automatically — so you know which delays actually push your finish date.
+        automatically - so you know which delays actually push your finish date.
       </SectionHeading>
 
       <Frame color="green">

@@ -2,7 +2,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { Section, SectionHeading } from "@/components/marketing/section";
 
 /**
- * Invoice feature section — "Stop chasing checks".
+ * Invoice feature section - "Stop chasing checks".
  * Standalone green gradient invoice mock (the prototype's `.m-inv`, not wrapped
  * in a device Frame), ported faithfully to Tailwind utilities.
  */
@@ -18,7 +18,7 @@ export function FeatureInvoice() {
         }
       >
         Send an invoice, get paid online, and watch your books update
-        themselves. From budget to reconciled payment — without touching your
+        themselves. From budget to reconciled payment - without touching your
         accounting software.
       </SectionHeading>
 

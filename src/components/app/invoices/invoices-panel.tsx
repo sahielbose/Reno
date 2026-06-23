@@ -138,7 +138,7 @@ export function InvoicesPanel({
           <div className="flex flex-col items-center justify-center gap-3 px-5 py-16 text-center">
             <FileText className="text-text-3 size-8" aria-hidden="true" />
             <p className="text-text-2 text-sm font-medium">
-              No invoices yet — bill a progress draw or add line items.
+              No invoices yet - bill a progress draw or add line items.
             </p>
             <Button variant="outline" onClick={() => setCreateOpen(true)}>
               <Plus aria-hidden="true" />
@@ -298,7 +298,7 @@ function InvoiceRowItem({
           {formatCurrency(invoice.balance)}
         </TableCell>
         <TableCell className="text-text-2">
-          {invoice.dueDate ? formatDate(invoice.dueDate) : "—"}
+          {invoice.dueDate ? formatDate(invoice.dueDate) : "-"}
         </TableCell>
         <TableCell>
           <div className="flex items-center justify-end gap-1.5">
@@ -563,7 +563,7 @@ function NewInvoiceDialog({
                       onChange={(e) =>
                         setLine(i, { description: e.target.value })
                       }
-                      placeholder="Framing — north wall"
+                      placeholder="Framing - north wall"
                       className="flex-1"
                     />
                     <Input

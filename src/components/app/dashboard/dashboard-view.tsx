@@ -82,7 +82,7 @@ export function DashboardView({ stats }: { stats: DashboardStats }) {
     stats.overdueAmount > 0
       ? `${formatCurrency(stats.overdueAmount)} across ${stats.overdueCount} invoice${
           stats.overdueCount === 1 ? "" : "s"
-        } is past due — worth a nudge to keep cash flowing.`
+        } is past due - worth a nudge to keep cash flowing.`
       : stats.activeCount > 0
         ? `${stats.activeCount} project${
             stats.activeCount === 1 ? "" : "s"
@@ -123,7 +123,7 @@ export function DashboardView({ stats }: { stats: DashboardStats }) {
 
       {/* 2) Two-column area */}
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
-        {/* LEFT — active projects */}
+        {/* LEFT - active projects */}
         <Card>
           <CardHeader>
             <CardTitle>Active projects</CardTitle>
@@ -174,19 +174,21 @@ export function DashboardView({ stats }: { stats: DashboardStats }) {
                         href={`/app/projects/${s.project.id}`}
                         className="focus-visible:ring-brand/50 -mx-1 -my-0.5 flex items-center gap-3 rounded-sm px-1 py-0.5 outline-none focus-visible:ring-2"
                       >
-                        <span
-                          className="text-[1.15rem] leading-none"
-                          aria-hidden
-                        >
-                          {s.project.icon ?? "📁"}
-                        </span>
+                        {s.project.icon ? (
+                          <span
+                            className="text-[1.15rem] leading-none"
+                            aria-hidden
+                          >
+                            {s.project.icon}
+                          </span>
+                        ) : null}
                         <span className="text-foreground min-w-0 truncate font-semibold">
                           {s.project.name}
                         </span>
                       </Link>
                     </TableCell>
                     <TableCell className="text-text-2">
-                      {s.project.client?.name ?? "—"}
+                      {s.project.client?.name ?? "-"}
                     </TableCell>
                     <TableCell>
                       <ProjectStatusBadge status={s.project.status} />
@@ -201,7 +203,7 @@ export function DashboardView({ stats }: { stats: DashboardStats }) {
           )}
         </Card>
 
-        {/* RIGHT — assistant */}
+        {/* RIGHT - assistant */}
         <Card>
           <CardHeader>
             <CardTitle>From the assistant</CardTitle>

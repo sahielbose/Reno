@@ -1,6 +1,6 @@
 /**
- * Auth provider abstraction. Phases 1–17 use a local dev provider; Phase 18
- * swaps in Clerk behind this same interface — no app code changes.
+ * Auth provider abstraction. Phases 1-17 use a local dev provider; Phase 18
+ * swaps in Clerk behind this same interface - no app code changes.
  */
 import type { Role } from "@prisma/client";
 

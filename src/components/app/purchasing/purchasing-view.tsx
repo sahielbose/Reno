@@ -110,7 +110,7 @@ const STATUS_LABEL: Record<POStatus | BillStatus, string> = {
   PAID: "Paid",
 };
 
-/** Shared control classes — matches the Input look for native selects. */
+/** Shared control classes - matches the Input look for native selects. */
 const controlClass = cn(
   "border-line text-foreground flex w-full rounded-[9px] border bg-white px-[0.8rem] py-[0.6rem] text-[0.92rem] transition-colors outline-none",
   "placeholder:text-text-3",
@@ -129,7 +129,7 @@ type Project = { id: string; name: string };
 type Vendor = { id: string; name: string };
 
 /**
- * Vendor-side purchasing hub — Purchase Orders and Vendor Bills. PO numbers
+ * Vendor-side purchasing hub - Purchase Orders and Vendor Bills. PO numbers
  * and money carry forward from the cost catalog through to bills; both lists
  * support inline status changes and deletes, plus dialogs to create new
  * records. All mutations run inside transitions and surface errors via toast.
@@ -173,7 +173,7 @@ export function PurchasingView({
           {pos.length === 0 ? (
             <EmptyState
               icon={<ShoppingCart className="text-text-3 size-8" />}
-              message="No purchase orders yet — issue one to a vendor."
+              message="No purchase orders yet - issue one to a vendor."
               actionLabel="New PO"
               onAction={() => setPoOpen(true)}
               disabled={projects.length === 0}
@@ -219,7 +219,7 @@ export function PurchasingView({
           {bills.length === 0 ? (
             <EmptyState
               icon={<Receipt className="text-text-3 size-8" />}
-              message="No vendor bills yet — record one against a PO or project."
+              message="No vendor bills yet - record one against a PO or project."
               actionLabel="New bill"
               onAction={() => setBillOpen(true)}
               disabled={projects.length === 0}
@@ -331,7 +331,7 @@ function POTableRow({ po }: { po: PORow }) {
       </TableCell>
       <TableCell className="text-text-2">{po.projectName}</TableCell>
       <TableCell className="text-text-2">
-        {po.vendorName ?? <span className="text-text-3">—</span>}
+        {po.vendorName ?? <span className="text-text-3">-</span>}
       </TableCell>
       <TableCell>
         <StatusSelect
@@ -398,14 +398,14 @@ function BillTableRow({ bill }: { bill: BillRow }) {
   return (
     <TableRow className={cn(isPending && "opacity-60")}>
       <TableCell className="font-mono font-semibold tabular-nums">
-        {bill.number ?? <span className="text-text-3 font-sans">—</span>}
+        {bill.number ?? <span className="text-text-3 font-sans">-</span>}
       </TableCell>
       <TableCell className="text-text-2">{bill.projectName}</TableCell>
       <TableCell className="text-text-2">
-        {bill.vendorName ?? <span className="text-text-3">—</span>}
+        {bill.vendorName ?? <span className="text-text-3">-</span>}
       </TableCell>
       <TableCell className="font-mono tabular-nums">
-        {bill.poNumber ?? <span className="text-text-3 font-sans">—</span>}
+        {bill.poNumber ?? <span className="text-text-3 font-sans">-</span>}
       </TableCell>
       <TableCell className="text-right font-mono font-semibold tabular-nums">
         {formatCurrency(bill.amount)}
@@ -424,7 +424,7 @@ function BillTableRow({ bill }: { bill: BillRow }) {
         {bill.dueDate ? (
           formatDate(bill.dueDate, { withYear: true })
         ) : (
-          <span className="text-text-3 font-sans">—</span>
+          <span className="text-text-3 font-sans">-</span>
         )}
       </TableCell>
       <TableCell className="text-right">
@@ -856,7 +856,7 @@ function NewBillDialog({
           <Field
             label="Bill number"
             htmlFor="bill-number"
-            description="Optional — the vendor's invoice number."
+            description="Optional - the vendor's invoice number."
           >
             <Input
               id="bill-number"

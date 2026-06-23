@@ -43,7 +43,7 @@ export function FeatureEsign() {
         }
       >
         Add signers to any proposal or vendor agreement and send. They sign from
-        any device — no account, no separate e-sign tool — straight to the
+        any device - no account, no separate e-sign tool - straight to the
         record.
       </SectionHeading>
 
@@ -87,7 +87,7 @@ export function FeatureEsign() {
             <Skel width="60%" />
 
             <div className="border-amber bg-amber-soft text-warn mt-3.5 rounded-lg border-[1.5px] border-dashed p-[.9rem] text-center text-[.78rem] font-semibold">
-              Dana Whitfield — sign here
+              Dana Whitfield - sign here
             </div>
           </div>
 

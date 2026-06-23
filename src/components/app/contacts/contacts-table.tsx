@@ -151,13 +151,13 @@ export function ContactsTable({
                     <ContactTypeBadge type={c.type} />
                   </TableCell>
                   <TableCell className="text-text-2">
-                    {c.company ?? "—"}
+                    {c.company ?? "-"}
                   </TableCell>
                   <TableCell className="text-text-2">
-                    {c.email ?? "—"}
+                    {c.email ?? "-"}
                   </TableCell>
                   <TableCell className="text-text-2 mono">
-                    {c.phone ?? "—"}
+                    {c.phone ?? "-"}
                   </TableCell>
                   <TableCell className="mono text-right">
                     {c.clientProjects.length}

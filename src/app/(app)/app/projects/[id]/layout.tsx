@@ -28,9 +28,9 @@ export default async function ProjectHubLayout({
             {project.name}
           </h1>
           <div className="text-text-2 mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-            {project.client && <span>👤 {project.client.name}</span>}
-            {project.address && <span>📍 {project.address}</span>}
-            {project.trade && <span>🔨 {project.trade}</span>}
+            {project.client && <span>{project.client.name}</span>}
+            {project.address && <span>{project.address}</span>}
+            {project.trade && <span>{project.trade}</span>}
             <ProjectStatusBadge status={project.status} />
           </div>
         </div>

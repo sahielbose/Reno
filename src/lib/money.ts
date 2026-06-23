@@ -1,7 +1,7 @@
 import { toNumber } from "@/lib/format";
 
 /**
- * Money + budget math — the heart of the "numbers carry forward" spine.
+ * Money + budget math - the heart of the "numbers carry forward" spine.
  * All inputs accept number | string | Prisma.Decimal (anything with toString).
  * Pure and dependency-free so it's trivially unit-testable.
  */

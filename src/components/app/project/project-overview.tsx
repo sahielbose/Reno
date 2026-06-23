@@ -15,7 +15,7 @@ function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-/** Project hub Overview tab — financial summary alongside recent activity. */
+/** Project hub Overview tab - financial summary alongside recent activity. */
 export function ProjectOverview({
   summary,
   activity,

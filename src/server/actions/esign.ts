@@ -67,7 +67,7 @@ export async function sendForSignatureAction(
     if (recipient.email) {
       await getMailer().send({
         to: recipient.email,
-        subject: `Please review and sign — ${proposal.project.name}`,
+        subject: `Please review and sign - ${proposal.project.name}`,
         body: `Hi ${recipient.name}, your proposal is ready to sign: ${url}`,
       });
     }
@@ -127,7 +127,7 @@ export async function submitSignatureAction(
       signedAt: new Date(),
     });
 
-    // Notification hook (stub — Inngest/Resend in Phase 19).
+    // Notification hook (stub - Inngest/Resend in Phase 19).
     const proposal = await db.proposal.findUnique({
       where: { id: access.targetId },
     });

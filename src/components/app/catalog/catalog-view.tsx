@@ -40,7 +40,7 @@ import {
 import { formatCurrency } from "@/lib/format";
 
 /**
- * A single row in the cost catalog — the org-scoped library of reusable cost
+ * A single row in the cost catalog - the org-scoped library of reusable cost
  * codes that feed budgets, POs, and vendor bills (the "numbers carry forward"
  * spine). Kept intentionally lean for the table/form UI.
  */
@@ -62,7 +62,7 @@ function toDefaults(item: CatalogItem | null): CostCatalogItemInput {
 }
 
 /**
- * CatalogView — the Cost Catalog module: a searchable table of cost codes plus
+ * CatalogView - the Cost Catalog module: a searchable table of cost codes plus
  * a create/edit form dialog. Rows are clickable to edit; the toolbar action
  * opens a blank form. Self-contained client component.
  */
@@ -93,7 +93,7 @@ export function CatalogView({
     reset,
     formState: { errors },
   } = useForm<CostCatalogItemInput>({
-    // zod v4 schema vs @hookform/resolvers bundled types — runtime is fine.
+    // zod v4 schema vs @hookform/resolvers bundled types - runtime is fine.
     resolver: zodResolver(
       costCatalogItemInputSchema as never,
     ) as unknown as import("react-hook-form").Resolver<CostCatalogItemInput>,

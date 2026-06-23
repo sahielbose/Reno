@@ -65,13 +65,13 @@ export default async function ProposalsPage() {
                         href={`/app/projects/${p.projectId}/proposal`}
                         className="hover:text-brand"
                       >
-                        {p.number ?? "—"}
+                        {p.number ?? "-"}
                       </Link>
                     </TableCell>
                     <TableCell>{p.project.name}</TableCell>
-                    <TableCell>{p.project.client?.name ?? "—"}</TableCell>
+                    <TableCell>{p.project.client?.name ?? "-"}</TableCell>
                     <TableCell className="mono text-right">
-                      {p.total ? formatCurrency(toNumber(p.total)) : "—"}
+                      {p.total ? formatCurrency(toNumber(p.total)) : "-"}
                     </TableCell>
                     <TableCell>
                       <Badge variant={s.variant} dot={s.dot}>

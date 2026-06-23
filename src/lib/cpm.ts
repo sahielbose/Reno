@@ -1,5 +1,5 @@
 /**
- * Critical Path Method (CPM) — forward/backward pass over a task network with
+ * Critical Path Method (CPM) - forward/backward pass over a task network with
  * FS/SS/FF/SF dependencies + lag. Pure and unit-tested. Day units are integers.
  */
 export type DependencyType = "FS" | "SS" | "FF" | "SF";

@@ -28,14 +28,14 @@ export function getSession(): Promise<Session | null> {
 export async function requireSession(): Promise<Session> {
   const session = await getSession();
   if (!session) {
-    throw new Error("No active session — sign in to continue.");
+    throw new Error("No active session - sign in to continue.");
   }
   return session;
 }
 
 /**
  * The tenant context for the current request. Every repository call is scoped
- * by `orgId` from here — client-supplied org ids are never trusted.
+ * by `orgId` from here - client-supplied org ids are never trusted.
  */
 export async function getOrgContext(): Promise<OrgContext> {
   const session = await requireSession();

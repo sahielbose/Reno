@@ -54,6 +54,17 @@ pnpm e2e         # playwright e2e
 
 ## Progress
 
-- **Phase 1 ✅** — repo scaffold & tooling (Next 15 + TS, Tailwind v4, shadcn/ui,
-  eslint/prettier/husky, vitest/playwright, CI).
-- Next: **Phase 2** — design system & UI primitives + `/styleguide`.
+**Phases 1–20 ✅ — build complete.** The full local app runs on stubs; every
+external integration sits behind an interface that activates by env var.
+
+- **1–7** — scaffold, design system, app shell, marketing, data model + seed,
+  dev auth/tenancy/roles, contacts/CRM.
+- **8–12** — projects + hub + dashboard, budget builder, cost catalog,
+  proposals, e-signatures + passwordless signer portal.
+- **13–17** — documents/RFIs, canvas takeoffs → budget, scheduling + CPM
+  critical path, invoices/payments/POs/bills/bids, AI assistant + notifications
+  - golden-path e2e.
+- **18–20** — go-live adapters (Clerk/Neon, Resend/Claude/S3/R2, Stripe/QBO)
+  behind interfaces; see `GO_LIVE.md`. Set a key → that integration turns on.
+
+Quality gate: `pnpm lint && pnpm typecheck && pnpm test && pnpm build` all green.

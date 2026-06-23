@@ -21,7 +21,7 @@ function verify(payload: string, header: string, secret: string): boolean {
 
 /**
  * Stripe webhook: on `checkout.session.completed`, record the payment against
- * the invoice referenced in metadata — flipping it to Paid and updating the
+ * the invoice referenced in metadata - flipping it to Paid and updating the
  * dashboard, exactly like a manual payment.
  */
 export async function POST(req: Request) {

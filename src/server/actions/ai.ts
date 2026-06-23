@@ -2,8 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 
+import { db } from "@/lib/db";
 import { getOrgContext } from "@/lib/auth";
-import { getAIProvider } from "@/lib/ai";
+import { resolveAIProvider } from "@/lib/ai";
 import { buildAssistantContext } from "@/server/services/assistant";
 import * as repo from "@/server/repositories/ai";
 
@@ -34,16 +35,24 @@ export async function sendMessageAction(
 
     await repo.addMessage(id, "USER", text);
 
-    const [ctx, thread] = await Promise.all([
+    const [ctx, thread, org] = await Promise.all([
       buildAssistantContext(orgId),
       repo.getThread(orgId, id),
+      db.organization.findUnique({
+        where: { id: orgId },
+        select: { aiApiKey: true, aiModel: true },
+      }),
     ]);
     const history = (thread?.messages ?? []).map((m) => ({
       role: m.role.toLowerCase() as "user" | "assistant" | "system",
       content: m.content,
     }));
 
-    const answer = await getAIProvider().complete(history, ctx);
+    const provider = resolveAIProvider({
+      apiKey: org?.aiApiKey,
+      model: org?.aiModel,
+    });
+    const answer = await provider.complete(history, ctx);
     await repo.addMessage(id, "ASSISTANT", answer);
 
     revalidatePath("/app/assistant");

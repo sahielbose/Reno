@@ -30,7 +30,7 @@ import {
 } from "@/server/schemas/project";
 import { createProjectAction } from "@/server/actions/project";
 
-/** Shared control classes — matches the Input look for the selects. */
+/** Shared control classes - matches the Input look for the selects. */
 const controlClass = cn(
   "border-line text-foreground flex w-full rounded-[9px] border bg-white px-[0.8rem] py-[0.6rem] text-[0.92rem] transition-colors outline-none",
   "placeholder:text-text-3",
@@ -67,7 +67,7 @@ export function NewProjectDialog({
     reset,
     formState: { errors },
   } = useForm<ProjectInput>({
-    // zod v4 schema vs @hookform/resolvers bundled v4.0 types — runtime is fine.
+    // zod v4 schema vs @hookform/resolvers bundled v4.0 types - runtime is fine.
     resolver: zodResolver(
       projectInputSchema as never,
     ) as unknown as import("react-hook-form").Resolver<ProjectInput>,
@@ -108,7 +108,7 @@ export function NewProjectDialog({
         <DialogHeader>
           <DialogTitle>New project</DialogTitle>
           <DialogDescription>
-            Start a new project — you can fill in the rest of the details later.
+            Start a new project - you can fill in the rest of the details later.
           </DialogDescription>
         </DialogHeader>
 
@@ -141,7 +141,7 @@ export function NewProjectDialog({
                 defaultValue=""
                 {...register("clientId")}
               >
-                <option value="">— No client —</option>
+                <option value="">- No client -</option>
                 {clients.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}

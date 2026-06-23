@@ -6,7 +6,7 @@ import { XIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-/** Sheet — a right-anchored slide-over built on the Base UI Dialog. Used for
+/** Sheet - a right-anchored slide-over built on the Base UI Dialog. Used for
  *  detail drawers (contacts, etc.). */
 const Sheet = DialogPrimitive.Root;
 const SheetTrigger = DialogPrimitive.Trigger;

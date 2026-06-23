@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 
 /**
- * Field — a labelled form control wrapper (the prototype's `.fld`). Pairs a
+ * Field - a labelled form control wrapper (the prototype's `.fld`). Pairs a
  * Label with any control and renders an optional hint or validation error.
  * Used across the app's forms (contacts, budgets, settings, …).
  */

@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-/** Table family — ported from the prototype's table styling: uppercase faint
+/** Table family - ported from the prototype's table styling: uppercase faint
  *  headers with a hairline rule, comfortable cells, paper-hover rows. Add
  *  `className="text-right"` (or the `.r` convention) for numeric columns. */
 function Table({ className, ...props }: React.ComponentProps<"table">) {

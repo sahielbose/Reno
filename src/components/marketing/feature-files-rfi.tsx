@@ -13,7 +13,7 @@ type FileRow = {
 const FILES: FileRow[] = [
   {
     icon: "PDF",
-    name: "Floor Plan — L1.pdf",
+    name: "Floor Plan - L1.pdf",
     badge: "brand",
     badgeLabel: "Plan",
     meta: "Mar 18",
@@ -27,7 +27,7 @@ const FILES: FileRow[] = [
   },
   {
     icon: "PDF",
-    name: "COI — Summit.pdf",
+    name: "COI - Summit.pdf",
     badge: "info",
     badgeLabel: "Insurance",
     meta: "Dec 2026",
@@ -49,7 +49,7 @@ const FILES: FileRow[] = [
 ];
 
 /**
- * Files + RFI feature section — a two-column product mock inside a dark device
+ * Files + RFI feature section - a two-column product mock inside a dark device
  * frame. LEFT: the project Files list; RIGHT: a resolved RFI thread.
  */
 export function FeatureFilesRfi() {
@@ -63,13 +63,13 @@ export function FeatureFilesRfi() {
           </ButtonLink>
         }
       >
-        Plans, permits, photos, contracts — all attached to the job. Requests go
+        Plans, permits, photos, contracts - all attached to the job. Requests go
         out, answers come back, and everything stays on the record.
       </SectionHeading>
 
       <Frame color="dark">
         <div className="grid grid-cols-[200px_1fr] bg-white">
-          {/* LEFT — Files list */}
+          {/* LEFT - Files list */}
           <div className="border-line border-r p-3.5">
             <div className="text-[0.9rem] font-bold">
               Files
@@ -108,7 +108,7 @@ export function FeatureFilesRfi() {
             </ul>
           </div>
 
-          {/* RIGHT — RFI thread */}
+          {/* RIGHT - RFI thread */}
           <div className="p-[18px]">
             <div className="flex items-center justify-between">
               <span className="mono text-text-3 text-[0.7rem]">RFI-003</span>
@@ -131,7 +131,7 @@ export function FeatureFilesRfi() {
                 SP
               </span>
               <p className="border-line bg-paper rounded-[11px] border px-[0.8rem] py-[0.6rem] text-[0.84rem]">
-                Plans show two possible spots on page 4. Which one — need it
+                Plans show two possible spots on page 4. Which one - need it
                 before rough-in tomorrow.
               </p>
             </div>

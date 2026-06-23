@@ -1,21 +1,34 @@
+import {
+  Building2,
+  Hammer,
+  HardHat,
+  Home,
+  type LucideIcon,
+} from "lucide-react";
+
 import { ButtonLink } from "@/components/ui/button";
 import { Section, SectionHeading, Frame } from "@/components/marketing/section";
 
 type Project = {
-  emoji: string;
+  Icon: LucideIcon;
   name: string;
   status: string;
   dot: string;
 };
 
 const PROJECTS: Project[] = [
-  { emoji: "🍳", name: "Maple St. Kitchen", status: "Active", dot: "bg-ok" },
-  { emoji: "🏠", name: "Oakwood ADU", status: "Active", dot: "bg-ok" },
-  { emoji: "🔨", name: "Ridgeline Roof", status: "Bidding", dot: "bg-amber" },
-  { emoji: "📐", name: "Beacon Hill 2nd", status: "Planning", dot: "bg-brand" },
+  { Icon: Hammer, name: "Maple St. Kitchen", status: "Active", dot: "bg-ok" },
+  { Icon: Home, name: "Oakwood ADU", status: "Active", dot: "bg-ok" },
+  { Icon: HardHat, name: "Ridgeline Roof", status: "Bidding", dot: "bg-amber" },
+  {
+    Icon: Building2,
+    name: "Beacon Hill 2nd",
+    status: "Planning",
+    dot: "bg-brand",
+  },
 ];
 
-/** AI feature section — "Nothing slips through the cracks". */
+/** AI feature section - "Nothing slips through the cracks". */
 export function FeatureAI() {
   return (
     <Section id="f-ai">
@@ -28,7 +41,7 @@ export function FeatureAI() {
         }
       >
         Every project, invoice, and deadline is watched for you. Ask about any
-        job and get an answer — with the receipts — in seconds.
+        job and get an answer - with the receipts - in seconds.
       </SectionHeading>
 
       <Frame color="blue">
@@ -49,10 +62,10 @@ export function FeatureAI() {
                   className="mt-2 flex items-center gap-[0.6rem] rounded-[9px] px-[0.4rem] py-[0.55rem]"
                 >
                   <div
-                    className="bg-brand-100 grid size-[30px] flex-none place-items-center rounded-[7px]"
+                    className="bg-brand-100 text-brand grid size-[30px] flex-none place-items-center rounded-[7px]"
                     aria-hidden="true"
                   >
-                    {p.emoji}
+                    <p.Icon className="size-4" />
                   </div>
                   <div>
                     <div className="text-[0.82rem] leading-[1.2] font-semibold">
@@ -91,7 +104,7 @@ export function FeatureAI() {
               <div className="border-line bg-paper max-w-[80%] rounded-[13px] border px-[0.9rem] py-[0.7rem] text-[0.9rem] leading-[1.45]">
                 Not yet. <b>Invoice #3 for $7,500</b> went out Mar 3 and is
                 still <span className="text-danger">unpaid</span>. The build
-                starts <b>Mar 28</b> — worth a nudge.
+                starts <b>Mar 28</b> - worth a nudge.
                 {/* Embedded invoice mini-card */}
                 <div className="border-line mt-[0.6rem] rounded-[10px] border px-[0.8rem] py-[0.7rem] text-[0.82rem]">
                   <div className="text-text-3 flex justify-between text-[0.7rem]">
@@ -101,7 +114,7 @@ export function FeatureAI() {
                     </span>
                   </div>
                   <div className="mt-[0.3rem] font-semibold">
-                    Maple Street Kitchen — Deposit
+                    Maple Street Kitchen - Deposit
                   </div>
                   <div className="mono font-bold">$7,500.00</div>
                 </div>

@@ -94,7 +94,7 @@ export default function StyleguidePage() {
             </h1>
           </div>
           <p className="text-text-2">
-            The blueprint design system — brand tokens and primitives used
+            The blueprint design system - brand tokens and primitives used
             across the app.
           </p>
         </header>
@@ -119,7 +119,7 @@ export default function StyleguidePage() {
                 Space Grotesk display
               </p>
               <p className="text-lg">
-                Inter body — run every job from first bid to final build.
+                Inter body - run every job from first bid to final build.
               </p>
               <p className="mono text-lg">
                 JetBrains Mono · $48,200 · 1/4&quot;
@@ -302,7 +302,7 @@ export default function StyleguidePage() {
                   value="overview"
                   className="text-text-2 pt-4 text-sm"
                 >
-                  Project overview — financial summary and recent activity.
+                  Project overview - financial summary and recent activity.
                 </TabsContent>
                 <TabsContent
                   value="budget"
@@ -331,7 +331,7 @@ export default function StyleguidePage() {
                 <DialogHeader>
                   <DialogTitle>Send for signature</DialogTitle>
                   <DialogDescription>
-                    Your client signs from any device — no account, straight to
+                    Your client signs from any device - no account, straight to
                     the record.
                   </DialogDescription>
                 </DialogHeader>

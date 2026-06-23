@@ -13,7 +13,7 @@ export function FeatureTakeoff() {
           </ButtonLink>
         }
       >
-        Upload a plan, set the scale, and pull takeoffs in the browser — areas,
+        Upload a plan, set the scale, and pull takeoffs in the browser - areas,
         lengths, and counts that drop straight into your budget.
       </SectionHeading>
 

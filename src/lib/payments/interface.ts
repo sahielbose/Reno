@@ -1,4 +1,4 @@
-/** Payment provider abstraction — Stripe in production, a no-op locally. */
+/** Payment provider abstraction - Stripe in production, a no-op locally. */
 export interface PaymentLink {
   id: string;
   url: string;

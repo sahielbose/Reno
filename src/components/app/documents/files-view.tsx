@@ -63,7 +63,7 @@ function isPdf(contentType: string | null): boolean {
 
 /** Human-readable byte size, e.g. "1.2 MB". */
 function formatSize(bytes: number | null): string {
-  if (bytes == null) return "—";
+  if (bytes == null) return "-";
   if (bytes < 1024) return `${bytes} B`;
   const units = ["KB", "MB", "GB", "TB"] as const;
   let value = bytes / 1024;
@@ -188,7 +188,7 @@ export function FilesView({
             <div className="flex flex-col items-center justify-center gap-3 px-5 py-16 text-center">
               <FolderOpen className="text-text-3 size-8" aria-hidden="true" />
               <p className="text-text-2 text-sm font-medium">
-                No files yet — upload plans, permits, or photos.
+                No files yet - upload plans, permits, or photos.
               </p>
             </div>
           ) : (

@@ -7,7 +7,7 @@ export function FeatureBudgetProposal() {
   return (
     <Section tight>
       <SectionHeading
-        title="From cost breakdown to signed proposal — in one click"
+        title="From cost breakdown to signed proposal - in one click"
         cta={
           <ButtonLink href="/app/projects/p1/budget" variant="dark">
             Start a budget →
@@ -20,7 +20,7 @@ export function FeatureBudgetProposal() {
 
       <Frame color="amber">
         <div className="bg-paper grid grid-cols-2 gap-3.5 p-3.5">
-          {/* LEFT — budget card */}
+          {/* LEFT - budget card */}
           <div className="border-line overflow-hidden rounded-xl border bg-white text-[0.8rem]">
             <div className="border-line flex items-center justify-between border-b px-[0.85rem] py-[0.7rem]">
               <div>
@@ -92,7 +92,7 @@ export function FeatureBudgetProposal() {
             </div>
           </div>
 
-          {/* RIGHT — proposal card */}
+          {/* RIGHT - proposal card */}
           <div className="border-line overflow-hidden rounded-xl border bg-white text-[0.8rem]">
             <div className="border-line flex items-center justify-between border-b px-[0.85rem] py-[0.7rem]">
               <div className="flex items-center gap-[0.4rem]">

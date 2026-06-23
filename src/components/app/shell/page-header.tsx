@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
-/** Back / breadcrumb affordance — the prototype's `.bks` link. */
+/** Back / breadcrumb affordance - the prototype's `.bks` link. */
 export function BackLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
@@ -14,7 +14,7 @@ export function BackLink({ href, label }: { href: string; label: string }) {
   );
 }
 
-/** Standard page header — title, optional subtitle, and right-aligned actions.
+/** Standard page header - title, optional subtitle, and right-aligned actions.
  *  Mirrors the prototype's `.ph` block. */
 export function PageHeader({
   title,

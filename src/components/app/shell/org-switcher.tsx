@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-/** Org switcher in the sidebar header — switches the active tenant (dev: cookie). */
+/** Org switcher in the sidebar header - switches the active tenant (dev: cookie). */
 export function OrgSwitcher({
   org,
   orgs,

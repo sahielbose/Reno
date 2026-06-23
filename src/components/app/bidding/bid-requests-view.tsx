@@ -56,7 +56,7 @@ export type BidRow = {
 type BidStatus = BidRow["status"];
 type ResponseStatus = BidResponseRow["status"];
 
-/** Shared control classes — matches the Input look for the native select & textarea. */
+/** Shared control classes - matches the Input look for the native select & textarea. */
 const controlClass = cn(
   "border-line text-foreground flex w-full rounded-[9px] border bg-white px-[0.8rem] py-[0.6rem] text-[0.92rem] transition-colors outline-none",
   "placeholder:text-text-3",
@@ -135,7 +135,7 @@ export function BidRequestsView({
           <div className="flex flex-col items-center justify-center gap-3 px-5 py-16 text-center">
             <Gavel className="text-text-3 size-8" aria-hidden="true" />
             <p className="text-text-2 text-sm font-medium">
-              No bid requests yet — invite subs to bid a scope.
+              No bid requests yet - invite subs to bid a scope.
             </p>
             <Button
               variant="outline"
@@ -175,7 +175,7 @@ function BidCard({
   const [isPending, startTransition] = useTransition();
   const awarded = bid.status === "AWARDED";
 
-  // Lowest submitted, non-declined amount — used to flag the low bid.
+  // Lowest submitted, non-declined amount - used to flag the low bid.
   const lowestAmount = useMemo(() => {
     const amounts = bid.responses
       .filter((r) => r.status !== "DECLINED" && r.amount != null)
@@ -265,7 +265,7 @@ function BidCard({
 
         {bid.responses.length === 0 ? (
           <p className="text-text-3 text-sm">
-            No bids yet — record a response below as subs reply.
+            No bids yet - record a response below as subs reply.
           </p>
         ) : (
           <div className="border-line rounded-reno overflow-hidden border">
@@ -307,7 +307,7 @@ function BidCard({
                           {response.amount != null ? (
                             formatCurrency(response.amount)
                           ) : (
-                            <span className="text-text-3">—</span>
+                            <span className="text-text-3">-</span>
                           )}
                           {isLow && (
                             <Badge variant="amber" size="sm">
@@ -318,7 +318,7 @@ function BidCard({
                       </TableCell>
                       <TableCell className="text-text-2 max-w-[16rem] truncate whitespace-normal">
                         {response.notes ?? (
-                          <span className="text-text-3">—</span>
+                          <span className="text-text-3">-</span>
                         )}
                       </TableCell>
                       <TableCell>
@@ -588,7 +588,7 @@ function CreateBidRequestDialog({
             label="Invite subs"
             description={
               subs.length === 0
-                ? "No subcontractors on file yet — you can record bids later."
+                ? "No subcontractors on file yet - you can record bids later."
                 : "Pick subcontractors to invite to this bid."
             }
           >
